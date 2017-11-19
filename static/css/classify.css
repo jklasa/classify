@@ -81,42 +81,37 @@ hr {
 /* ===========================================
  *          Playlist input selection
  * =========================================== */
-.playlist-input {
+.table-input {
     margin-top: 10px;
 }
 
-.playlist-input input[type="radio"] {
-    opacity: 0.01;
-    z-index: 100;
-}
-
-.playlist-input input[type="radio"]:checked + label, .checked + label {
-    background: #bdbdbd;
-}
-
-.playlist-input label {
+.table-input tr.clickable-row {
+    height: 80px;
     cursor: pointer;
-    z-index: 90;
 }
 
-.playlist-input label:hover {
-    background: #cbcbcb;
+.table-input tr.clickable-row:hover {
+    background: #dedede;
 }
 
-.playlist-input tr {
-    height: 50px;
-}
-
-.playlist-input td {
-    vertical-align: middle;
+.table-input tr > td, .table-input tr > th {
     font-size: 125%;
+    vertical-align: middle !important;
     padding: 5px 0 5px 10px;
+    border: 0 !important;
 }
 
-.playlist-input img {
-    width: 50px;
+.table-input tr.active > td {
+    background-color: rgba(129, 212, 153, 0.75) !important
 }
 
+.table-input tr > td > img {
+    width: 80px;
+}
+
+.table-input tr p {
+    margin: 0;
+}
 
 /* ===========================================
  *              Other classes

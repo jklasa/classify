@@ -6,6 +6,19 @@
 <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='fonts/fonts.css') }}">
 {% endblock %}
 
+{% block scripts %}
+{{ super() }}
+<script>
+$('#playlist-input').on('click', '.clickable-row', function(event) {
+  if($(this).hasClass('active')){
+    $(this).removeClass('active'); 
+  } else {
+    $(this).addClass('active').siblings().removeClass('active');
+  }
+});
+</script>
+{% endblock %}
+
 {% block content %}
 <div class="container">
     <div class="card clearfix">
@@ -16,17 +29,28 @@
     </div>
     <div class="card">
         <p class="heading">select a playlist</p>
-        <table class="playlist-input clear">
-            {% for item in playlists %}
+        <table id="playlist-input" class="table-input table clear">
             <tr>
+                <th></th>
+                <th><p>name</p></th>
+                <th><p>owner</p></th>
+                <th><p>number of tracks</p></th>
+            </tr>
+            {% for item in playlists %}
+            <tr class="clickable-row">
                 <td>
                 {% if item['images'][0] is defined %}
                     <img src="{{ item['images'][0]['url'] }}">
                 {% endif %}
                 </td>
                 <td>
-                    <input type="radio" name="playlist" id="{{ item['id'] }}" value="{{ item['id'] }}"></input>
-                    <label for="{{ item['id'] }}">{{ item['name'] }}</label>
+                    <p>{{ item['name'] }}</p>
+                </td>
+                <td>
+                    <p>{{ item['owner']['id'] }}</p>
+                </td>
+                <td>
+                    <p>{{ item['tracks']['total'] }}</p>
                 </td>
             </tr>
             {% endfor %}

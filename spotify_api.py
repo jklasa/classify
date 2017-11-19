@@ -30,7 +30,7 @@ def get_auth_url(redirect_uri):
         "redirect_uri": redirect_uri,
         "scope": SCOPE,
         # "state": STATE,
-        # "show_dialog": SHOW_DIALOG_str,
+        "show_dialog": SHOW_DIALOG_str,
         "client_id": CLIENT_ID
     }
 
