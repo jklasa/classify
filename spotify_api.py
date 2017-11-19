@@ -23,8 +23,9 @@ SPOTIFY_API_VERSION = "v1"
 
 # Spotify Endpoints
 SPOTIFY_API_ENDPOINT = "{}/{}".format(SPOTIFY_API_BASE_URL, SPOTIFY_API_VERSION)
-GET_PROFILE_ENDPOINT = SPOTIFY_API_ENDPOINT + "/me"
-GET_PLAYLISTS_ENDPOINT = SPOTIFY_API_ENDPOINT + "/me/playlists"
+PROFILE_ENDPOINT = SPOTIFY_API_ENDPOINT + "/me"
+PLAYLISTS_ENDPOINT = SPOTIFY_API_ENDPOINT + "/me/playlists"
+TRACKS_ENDPOINT = SPOTIFY_API_ENDPOINT + "/users/{}/playlists/{}/tracks"
 
 def get_auth_url(redirect_uri):
     auth_query_parameters = {
@@ -60,13 +61,17 @@ def get_unauthorized(url):
     return json.loads(resp.text)
 
 def get_profile(auth_header):
-    url = GET_PROFILE_ENDPOINT
+    url = PROFILE_ENDPOINT
     return get_authorized(auth_header, url)
 
 def get_playlists(auth_header):
-    url = GET_PLAYLISTS_ENDPOINT
-    resp = requests.get(url, headers=auth_header)
-    return json.loads(resp.text)
+    url = PLAYLISTS_ENDPOINT
+    return get_authorized(auth_header, url)
+
+def get_tracks(auth_header, user_id, playlist_id):
+    url = TRACKS_ENDPOINT.format(user_id, playlist_id)
+    print url
+    return get_authorized(auth_header, url)
 
 # https://developer.spotify.com/web-api/get-artist/
 def get_artist(artist_id):

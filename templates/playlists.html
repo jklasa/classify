@@ -18,7 +18,7 @@ $('#playlist-input').on('click', '.clickable-row', function(event) {
 });
 
 urlParam = function(name) {
-    var results = new RegExp('[\?&]' + name + '=([^]*)').exec(window.location.href);
+    var results = new RegExp('[\?&]' + name + '=([^#&]*)').exec(window.location.href);
     if (results == null) {
        return null;
     } else {
@@ -35,7 +35,7 @@ $('#submit-playlist').on('click', function(event) {
     location.href = "#";
     location.href = "#no-playlist-alert";
   } else {
-    var redir = 'tracks?token=' + token + "&id=" + id;
+    var redir = 'tracks?token=' + token + "&uid={{ uid }}&pid=" + id;
     window.location.replace(redir);
   }
 });

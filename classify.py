@@ -38,7 +38,7 @@ def tokenrecv():
 def playlists():
     # Auth Step 6: Use the access token to access Spotify API
     access_token = request.args['token']
-    authorization_header = {"Authorization":"Bearer {}".format(access_token)}
+    authorization_header = {"Authorization": "Bearer {}".format(access_token)}
 
     # Get profile data
     profile_data = get_profile(authorization_header)
@@ -47,12 +47,21 @@ def playlists():
     playlist_data = get_playlists(authorization_header)
     
     # Display playlist data
-    return render_template("playlists.html", playlists=playlist_data["items"])
+    return render_template("playlists.html", playlists=playlist_data["items"], uid=profile_data["id"])
 
 
 @app.route("/tracks")
 def tracks():
-    return render_template("tracks.html");
+    # Auth Step 6: Use the access token to access Spotify API
+    access_token = request.args['token']
+    authorization_header = {"Authorization": "Bearer {}".format(access_token)}
+
+    # Get tracks from playlist
+    user_id = request.args['uid']
+    playlist_id = request.args['pid']
+    tracks_data = get_tracks(authorization_header, user_id, playlist_id)
+
+    return render_template("tracks.html", tracks=tracks_data['items']);
 
 @app.route("/error")
 def error():

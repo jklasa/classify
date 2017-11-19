@@ -143,20 +143,61 @@ hr {
 }
 
 /* ===========================================
+ *              Content cards
+ * =========================================== */
+.card {
+    background: #f6f6f6;
+    border-radius: 20px;
+    padding: 20px 30px;
+    margin: 30px 0;
+    box-shadow: 0 4px 8px 0 gray;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+
+.vcard {
+    width: 48%;
+}
+
+.hcard {
+    height: 45%;
+}
+
+.left-card {
+    float: left;
+}
+
+.right-card {
+    float: right;
+}
+
+/* ===========================================
+ *              Scrollable content
+ * =========================================== */
+.scrollable {
+    overflow-y: auto;
+    height: 40em;
+    padding-top: 20px 0;
+}
+
+.scroller-fade {
+    height: 30px;
+    position: absolute;
+}
+
+.scroller-fade-top {
+    background: linear-gradient(to bottom, rgba(246, 246, 246, 1) 0%, rgba(246, 246, 246, 0) 100%);
+}
+
+.scroller-fade-bottom {
+    background: linear-gradient(to top, rgba(246, 246, 246, 1) 0%, rgba(246, 246, 246, 0) 100%);
+}
+
+/* ===========================================
  *              Other classes
  * =========================================== */
 .center {
     display: block;
     margin: auto;
-}
-
-.card {
-    background: #f6f6f6;
-    border-radius: 20px;
-    padding: 30px;
-    margin: 30px;
-    box-shadow: 0 4px 8px 0 gray;
-    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 }
 
 .clear {
@@ -192,6 +233,14 @@ hr {
 .submit-button {
     margin-top: 40px;
     max-width: 30em;
+}
+
+.blurred {
+  -webkit-filter: blur(2px);
+  -moz-filter: blur(2px);
+  -o-filter: blur(2px);
+  -ms-filter: blur(2px);
+  filter: blur(2px);
 }
 
 /* ===========================================
