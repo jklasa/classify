@@ -52,7 +52,7 @@ def playlists():
 
 @app.route("/tracks")
 def tracks():
-    print(request.args['id'])
+    return render_template("tracks.html");
 
 @app.route("/error")
 def error():

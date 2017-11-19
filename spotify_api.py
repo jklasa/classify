@@ -3,9 +3,11 @@ import json
 import requests
 import urllib
 
-# Client keys
-CLIENT_ID = "688bd9390f694368ba3a5f523ecf7057"
-CLIENT_SECRET = "4ce83b9045884ee9b508a9bbdef738af"
+# Client keys: must be stored in separate json file
+with open('spotify_secret.json') as json_data:
+    client = json.load(json_data)
+    CLIENT_ID = client['client_id']
+    CLIENT_SECRET = client['client_secret']
 
 # Spotify Parameters
 SCOPE = "user-library-read playlist-read-private playlist-read-collaborative"
