@@ -25,7 +25,7 @@ SPOTIFY_API_VERSION = "v1"
 SPOTIFY_API_ENDPOINT = "{}/{}".format(SPOTIFY_API_BASE_URL, SPOTIFY_API_VERSION)
 PROFILE_ENDPOINT = SPOTIFY_API_ENDPOINT + "/me"
 PLAYLISTS_ENDPOINT = SPOTIFY_API_ENDPOINT + "/me/playlists"
-TRACKS_ENDPOINT = SPOTIFY_API_ENDPOINT + "/users/{}/playlists/{}/tracks"
+TRACKS_ENDPOINT = SPOTIFY_API_ENDPOINT + "/users/{uid}/playlists/{pid}/tracks"
 
 def get_auth_url(redirect_uri):
     auth_query_parameters = {
@@ -69,34 +69,7 @@ def get_playlists(auth_header):
     return get_authorized(auth_header, url)
 
 def get_tracks(auth_header, user_id, playlist_id):
-    url = TRACKS_ENDPOINT.format(user_id, playlist_id)
+    url = TRACKS_ENDPOINT.format(uid=user_id, pid=playlist_id)
     print url
     return get_authorized(auth_header, url)
 
-# https://developer.spotify.com/web-api/get-artist/
-def get_artist(artist_id):
-    url = GET_ARTIST_ENDPOINT.format(id=artist_id)
-    resp = requests.get(url)
-    return resp.json()
-
-
-# https://developer.spotify.com/web-api/search-item/
-def search_by_artist_name(name):
-    myparams = {'type': 'artist'}
-    myparams['q'] = name
-    resp = requests.get(SEARCH_ENDPOINT, params=myparams)
-    return resp.json()
-
-
-# https://developer.spotify.com/web-api/get-related-artists/
-def get_related_artists(artist_id):
-    url = RELATED_ARTISTS_ENDPOINT.format(id=artist_id)
-    resp = requests.get(url)
-    return resp.json()
-
-# https://developer.spotify.com/web-api/get-artists-top-tracks/
-def get_artist_top_tracks(artist_id, country='US'):
-    url = TOP_TRACKS_ENDPOINT.format(id=artist_id)
-    myparams = {'country': country}
-    resp = requests.get(url, params=myparams)
-    return resp.json()
