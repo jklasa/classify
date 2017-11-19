@@ -1,0 +1,183 @@
+/* ===========================================
+ *                  Font
+ * =========================================== */
+* {
+    font-size: 100%;
+    font-family: acherus_grotesqueregular;
+    color: #969696;
+}
+
+.xl-font {
+    font-size: 450% !important;
+}
+
+.lg-font {
+    font-size: 250% !important;
+}
+
+/* ===========================================
+ *       Universal element selectors
+ * =========================================== */
+html {
+    margin: 0;
+    min-height: 100%;
+    width: 100%;
+}
+
+body {
+    margin: 0px;
+    min-height: 100%;
+    background: #000000;
+/*    background: linear-gradient(-180deg, #BCC5CE 0%, #929EAD 98%), radial-gradient(at top left, rgba(255,255,255,0.30) 0%, rgba(0,0,0,0.30) 100%);
+    background-blend-mode: screen;*/
+    background: #BCC5CE;
+}
+
+hr {
+    border-color: #cbcbcb;
+    clear: both;
+    margin: 5px 0px 5px 0px;
+}
+
+/* ===========================================
+ *                 Buttons
+ * =========================================== */
+.btn {
+    background-color: #2ebd59;
+    border-radius: 30px;
+    border: none;
+}
+
+.btn:hover {
+    color: #fff;
+    background-color: #1ED760;
+}
+
+.btn:focus, .btn:active, .btn.active, .btn:active:hover {
+    color: #fff;
+    outline: 0 none;
+    background-color: #29a54e;
+}
+
+/* ===========================================
+ *                   Colors
+ * =========================================== */
+.green {
+    color: #29a54e;
+}
+
+.dark-gray {
+    color: #999999;
+}
+
+.gray {
+    color: #969696;
+}
+
+.light-gray {
+    color: #cbcbcb;
+}
+
+/* ===========================================
+ *          Playlist input selection
+ * =========================================== */
+.playlist-input {
+    margin-top: 10px;
+}
+
+.playlist-input input[type="radio"] {
+    opacity: 0.01;
+    z-index: 100;
+}
+
+.playlist-input input[type="radio"]:checked + label, .checked + label {
+    background: #bdbdbd;
+}
+
+.playlist-input label {
+    cursor: pointer;
+    z-index: 90;
+}
+
+.playlist-input label:hover {
+    background: #cbcbcb;
+}
+
+.playlist-input tr {
+    height: 50px;
+}
+
+.playlist-input td {
+    vertical-align: middle;
+    font-size: 125%;
+    padding: 5px 0 5px 10px;
+}
+
+.playlist-input img {
+    width: 50px;
+}
+
+
+/* ===========================================
+ *              Other classes
+ * =========================================== */
+.center {
+    display: block;
+    margin: auto;
+}
+
+.card {
+    background: #f6f6f6;
+    border-radius: 20px;
+    padding: 30px;
+    margin: 30px;
+    box-shadow: 0 4px 8px 0 gray;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+
+.clear {
+    clear: both;
+}
+
+.clearfix::after {
+    content: "";
+    clear: both;
+    display: table;
+}
+
+.title {
+    float: left;
+    font-size: 350%;
+    margin: 0;
+}
+
+.subtitle {
+    float: left;
+    font-size: 200%;
+}
+
+.heading {
+    font-size: 250%;
+    margin: 0;
+}
+
+.no-margin {
+    margin: 0 !important;
+}
+
+/* ===========================================
+ *              Individual elements
+ * =========================================== */
+#login-btn {
+    margin-top: 5em;
+    max-width: 22em;;w
+
+}
+
+#login-card {
+    margin: auto;
+    margin-top: 20% !important;
+    max-width: 50em;
+}
+
+

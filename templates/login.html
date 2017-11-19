@@ -1,0 +1,21 @@
+{% extends "bootstrap/base.html" %}
+
+{% block styles %}
+{{ super() }}
+<link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='css/classify.css') }}">
+<link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='fonts/fonts.css') }}">
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div id="login-card" class="card">
+        <div>
+            <p class="title xl-font dark-gray">class</p>
+            <p class="title xl-font green">ify.</p>
+        </div>
+        <hr/>
+        <p class="subtitle lg-font gray">audio classification for spotify</p>
+        <a id="login-btn" type="button" class="btn btn-success btn-lg center" href="{{ login_url }}">LOG IN WITH SPOTIFY</a>
+    </div>
+</div>
+{% endblock %}
