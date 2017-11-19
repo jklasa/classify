@@ -16,6 +16,29 @@ $('#playlist-input').on('click', '.clickable-row', function(event) {
     $(this).addClass('active').siblings().removeClass('active');
   }
 });
+
+urlParam = function(name) {
+    var results = new RegExp('[\?&]' + name + '=([^]*)').exec(window.location.href);
+    if (results == null) {
+       return null;
+    } else {
+       return results[1] || 0;
+    }
+}
+
+$('#submit-playlist').on('click', function(event) {
+  var token = urlParam('token');
+  var id = $('#playlist-input').find('.active').attr('value');
+  if (id == undefined) {
+    var alert = document.getElementById("no-playlist-alert");
+    alert.style.display = "block";
+    location.href = "#";
+    location.href = "#no-playlist-alert";
+  } else {
+    var redir = 'tracks?token=' + token + "&id=" + id;
+    window.location.replace(redir);
+  }
+});
 </script>
 {% endblock %}
 
@@ -37,7 +60,7 @@ $('#playlist-input').on('click', '.clickable-row', function(event) {
                 <th><p>number of tracks</p></th>
             </tr>
             {% for item in playlists %}
-            <tr class="clickable-row">
+            <tr class="clickable-row" value="{{ item['id'] }}">
                 <td>
                 {% if item['images'][0] is defined %}
                     <img src="{{ item['images'][0]['url'] }}">
@@ -55,6 +78,11 @@ $('#playlist-input').on('click', '.clickable-row', function(event) {
             </tr>
             {% endfor %}
         </table>
+        <a id="submit-playlist" type="button" class="btn btn-success btn-lg center submit-button">SUBMIT PLAYLIST</a>
+        <div id="no-playlist-alert" class="alert">
+            please select a playlist
+            <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
+        </div>
     </div>
 </div>
 {% endblock %}

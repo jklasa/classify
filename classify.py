@@ -50,6 +50,10 @@ def playlists():
     return render_template("playlists.html", playlists=playlist_data["items"])
 
 
+@app.route("/tracks")
+def tracks():
+    print(request.args['id'])
+
 @app.route("/error")
 def error():
     error = request.args['error']

@@ -40,7 +40,7 @@ hr {
 }
 
 /* ===========================================
- *                 Buttons
+ *              Classify button
  * =========================================== */
 .btn {
     background-color: #2ebd59;
@@ -114,6 +114,35 @@ hr {
 }
 
 /* ===========================================
+ *              Alert display
+ * =========================================== */
+.alert {
+    display: none;
+    color: white;
+    border-radius: 5px;
+    margin: 30px 0 0 0;
+    font-size: 140%;
+    text-align: center;
+    padding: 20px;
+    background: rgb(160, 160, 160);
+}
+
+.closebtn {
+    color: white;
+    margin-left: 15px;
+    font-weight: bold;
+    float: right;
+    font-size: 200%;
+    line-height: 20px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.closebtn:hover {
+    color: black;
+}
+
+/* ===========================================
  *              Other classes
  * =========================================== */
 .center {
@@ -158,6 +187,11 @@ hr {
 
 .no-margin {
     margin: 0 !important;
+}
+
+.submit-button {
+    margin-top: 40px;
+    max-width: 30em;
 }
 
 /* ===========================================
