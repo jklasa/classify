@@ -24,7 +24,7 @@ def tokenrecv():
     response_data = get_access_tokens(auth_token, REDIRECT_URI + "/tokenrecv")
     
     if 'error' in response_data:
-        return redirect(url_for("error") + "?error={}&desc={}".format(response_data['error'], response_data['error_description']))
+        return api_error_handler(response_data)
 
     access_token = response_data["access_token"]
     #refresh_token = response_data["refresh_token"]
@@ -42,12 +42,15 @@ def playlists():
 
     # Get profile data
     profile_data = get_profile(authorization_header)
-    
+
+    if 'error' in profile_data:
+        return api_error_handler(profile_data)
+
     # Get user playlist data
     playlist_data = get_playlists(authorization_header)
     
     # Display playlist data
-    return render_template("playlists.html", playlists=playlist_data["items"], uid=profile_data["id"])
+    return render_template("playlists.html", playlists=playlist_data["items"])
 
 
 @app.route("/tracks")
@@ -61,8 +64,14 @@ def tracks():
     playlist_id = request.args['pid']
     tracks_data = get_tracks(authorization_header, user_id, playlist_id)
 
+    if 'error' in tracks_data:
+        return api_error_handler(tracks_data)
+
     # Get audio features
     audio_feats = get_audio_features(authorization_header, tracks_data)['audio_features']
+
+    if 'error' in audio_feats:
+        return api_error_handler(audio_feats)
 
     # Get statistics
     stats = get_audio_stats(audio_feats)
@@ -75,6 +84,21 @@ def error():
     desc = request.args['desc']
 
     return render_template("error.html", error=error, description=desc)
+
+def api_error_handler(data):
+    error = data['error']
+
+    # Authentication error object
+    if 'error_description' in data:
+        desc = data['error_description']
+        err_args = "?error={}&desc={}".format(error, desc)
+    else:
+        desc = "{}: {}".format(error['status'], error['message'])
+        error = "uh oh. we received an error code from spotify"
+
+    err_args = "?error={}&desc={}".format(error, desc)
+    return redirect(url_for("error") + err_args)
+
 
 if __name__ == "__main__":
     app.run(debug=True,port=PORT)

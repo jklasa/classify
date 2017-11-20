@@ -1,22 +1,8 @@
-{% extends "bootstrap/base.html" %}
-
-{% block styles %}
-{{ super() }}
-<link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='css/classify.css') }}">
-<link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='fonts/fonts.css') }}">
-{% endblock %}
+{% extends "classy_table_base.html" %}
 
 {% block scripts %}
 {{ super() }}
 <script>
-$('#playlists-body').on('click', '.clickable-row', function(event) {
-  if($(this).hasClass('active')){
-    $(this).removeClass('active'); 
-  } else {
-    $(this).addClass('active').siblings().removeClass('active');
-  }
-});
-
 urlParam = function(name) {
     var results = new RegExp('[\?&]' + name + '=([^#&]*)').exec(window.location.href);
     if (results == null) {
@@ -26,88 +12,73 @@ urlParam = function(name) {
     }
 }
 
-$('#submit-playlist').on('click', function(event) {
-  var token = urlParam('token');
-  var id = $('#playlists-body').find('.active').attr('value');
-  if (id == undefined) {
+showPlaylistAlert = function() {
     var alert = document.getElementById("no-playlist-alert");
     alert.style.display = "block";
     location.href = "#";
-    location.href = "#no-playlist-alert";
-  } else {
-    var redir = 'tracks?token=' + token + "&uid={{ uid }}&pid=" + id;
-    window.location.replace(redir);
-  }
-});
-
-function setScrollFades() {
-  var destination = $('#playlists-body').offset();
-  $('#top-scroll-fade').offset(destination);
-
-  var height = $('#playlists-body').height();
-  destination.top += height;
-  destination.top -= $('#bottom-scroll-fade').height();
-  $('#bottom-scroll-fade').offset(destination);
-
-  var helperDiv = $('<div />');
-  $('#playlists-body').append(helperDiv);
-  $('#top-scroll-fade').width(helperDiv.width());
-  $('#bottom-scroll-fade').width(helperDiv.width());
-  helperDiv.remove();
+    location.href = "#no-playlist-alert";  
 }
 
-setScrollFades();
-window.onresize = setScrollFades;
+$('#submit-playlist').on('click', function(event) {
+    var token = urlParam('token');
+    var active = $('#table-body').find('.active').attr('value');
+    if (active == undefined) {
+        showPlaylistAlert();
+        return;
+    }
+
+    var vals = active.split(',');
+    var pid = vals[0];
+    var uid = vals[1];
+    if (vals == undefined || pid == undefined || uid == undefined) {
+        showPlaylistAlert();
+    } else {
+        var redir = 'tracks?token=' + token + "&uid=" + uid + "&pid=" + pid;
+        window.location.replace(redir);
+    }
+});
 </script>
 {% endblock %}
 
-{% block content %}
-<div class="container">
-    <div class="card clearfix">
-        <p class="title dark-gray">class</p>
-        <p class="title green">ify.</p>
-        <hr>
-        <p class="subtitle no-margin gray">audio classification for spotify</p>
-    </div>
-    <div class="card">
-        <p class="heading">select a playlist</p>
-        <div id="top-scroll-fade" class="scroller-fade scroller-fade-top"></div>
-        <div id="bottom-scroll-fade" class="scroller-fade scroller-fade-bottom"></div>
-            <table id="playlists-table" class="scrollable-table table-input classy-table table clear">
-                <thead>
-                    <tr>
-                        <th></th>
-                        <th><p>name</p></th>
-                        <th><p>owner</p></th>
-                        <th><p>number of tracks</p></th>
-                    </tr>
-                </thead>
-                <tbody id="playlists-body">
-                    {% for item in playlists %}
-                    <tr class="clickable-row" value="{{ item['id'] }}">
-                        <td>
-                        {% if item['images'][0] is defined %}
-                            <img src="{{ item['images'][0]['url'] }}">
-                        {% endif %}
-                        </td>
-                        <td>
-                            <p>{{ item['name'] }}</p>
-                        </td>
-                        <td>
-                            <p>{{ item['owner']['id'] }}</p>
-                        </td>
-                        <td>
-                            <p>{{ item['tracks']['total'] }}</p>
-                        </td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        <a id="submit-playlist" type="button" class="btn btn-success btn-lg center submit-button">SUBMIT PLAYLIST</a>
-        <div id="no-playlist-alert" class="alert">
-            please select a playlist
-            <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
-        </div>
+{% block classy_content %}
+<div class="card">
+    <p class="heading">select a playlist</p>
+    <div id="top-scroll-fade" class="scroller-fade scroller-fade-top"></div>
+    <div id="bottom-scroll-fade" class="scroller-fade scroller-fade-bottom"></div>
+        <table id="playlists-table" class="scrollable-table table-input classy-table table clear">
+            <thead>
+                <tr>
+                    <th></th>
+                    <th><p>name</p></th>
+                    <th><p>owner</p></th>
+                    <th><p>number of tracks</p></th>
+                </tr>
+            </thead>
+            <tbody id="table-body">
+                {% for item in playlists %}
+                <tr class="clickable-row" value="{{ item['id'] }},{{ item['owner']['id'] }}">
+                    <td>
+                    {% if item['images'][0] is defined %}
+                        <img src="{{ item['images'][0]['url'] }}">
+                    {% endif %}
+                    </td>
+                    <td>
+                        <p>{{ item['name'] }}</p>
+                    </td>
+                    <td>
+                        <p>{{ item['owner']['id'] }}</p>
+                    </td>
+                    <td>
+                        <p>{{ item['tracks']['total'] }}</p>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    <a id="submit-playlist" type="button" class="btn btn-success btn-lg center submit-button">SUBMIT PLAYLIST</a>
+    <div id="no-playlist-alert" class="alert">
+        please select a playlist
+        <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
     </div>
 </div>
 {% endblock %}
