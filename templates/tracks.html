@@ -9,24 +9,24 @@
 {% block scripts %}
 {{ super() }}
 <script>
-  function setScrollFades() {
-    var destination = $('#tracks-list').offset();
-    $('#top-scroll-fade').offset(destination);
-    
-    var height = $('#tracks-list').height();
-    destination.top += height;
-    destination.top -= $('#bottom-scroll-fade').height();
-    $('#bottom-scroll-fade').offset(destination);
+function setScrollFades() {
+  var destination = $('#tracks-body').offset();
+  $('#top-scroll-fade').offset(destination);
 
-    var helperDiv = $('<div />');
-    $('#tracks-list').append(helperDiv);
-    $('#top-scroll-fade').width(helperDiv.width());
-    $('#bottom-scroll-fade').width(helperDiv.width());
-    helperDiv.remove();
-  }
+  var height = $('#tracks-body').height();
+  destination.top += height;
+  destination.top -= $('#bottom-scroll-fade').height();
+  $('#bottom-scroll-fade').offset(destination);
 
-  setScrollFades();
-  window.onresize = setScrollFades;
+  var helperDiv = $('<div />');
+  $('#tracks-body').append(helperDiv);
+  $('#top-scroll-fade').width(helperDiv.width());
+  $('#bottom-scroll-fade').width(helperDiv.width());
+  helperDiv.remove();
+}
+
+setScrollFades();
+window.onresize = setScrollFades;
 </script>
 {% endblock %}
 
@@ -42,8 +42,8 @@
         <p class="heading">tracks</p>
         <div id="top-scroll-fade" class="scroller-fade scroller-fade-top"></div>
         <div id="bottom-scroll-fade" class="scroller-fade scroller-fade-bottom"></div>
-        <div id="tracks-list" class="scrollable">
-            <table class="table-input table clear">
+        <table class="scrollable-table classy-table table clear">
+            <tbody id="tracks-body">
                 {% for item in tracks %}
                 <tr>
                     <td>
@@ -51,8 +51,8 @@
                     </td>
                 </tr>
                 {% endfor %}
-            </table>
-        </div>
+            </tbody>
+        </table>
     </div>
     <div class="card vcard hcard right-card">
         <p class="heading">features</p>

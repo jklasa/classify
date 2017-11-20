@@ -9,7 +9,7 @@
 {% block scripts %}
 {{ super() }}
 <script>
-$('#playlist-input').on('click', '.clickable-row', function(event) {
+$('#playlists-body').on('click', '.clickable-row', function(event) {
   if($(this).hasClass('active')){
     $(this).removeClass('active'); 
   } else {
@@ -28,7 +28,7 @@ urlParam = function(name) {
 
 $('#submit-playlist').on('click', function(event) {
   var token = urlParam('token');
-  var id = $('#playlist-input').find('.active').attr('value');
+  var id = $('#playlists-body').find('.active').attr('value');
   if (id == undefined) {
     var alert = document.getElementById("no-playlist-alert");
     alert.style.display = "block";
@@ -39,6 +39,25 @@ $('#submit-playlist').on('click', function(event) {
     window.location.replace(redir);
   }
 });
+
+function setScrollFades() {
+  var destination = $('#playlists-body').offset();
+  $('#top-scroll-fade').offset(destination);
+
+  var height = $('#playlists-body').height();
+  destination.top += height;
+  destination.top -= $('#bottom-scroll-fade').height();
+  $('#bottom-scroll-fade').offset(destination);
+
+  var helperDiv = $('<div />');
+  $('#playlists-body').append(helperDiv);
+  $('#top-scroll-fade').width(helperDiv.width());
+  $('#bottom-scroll-fade').width(helperDiv.width());
+  helperDiv.remove();
+}
+
+setScrollFades();
+window.onresize = setScrollFades;
 </script>
 {% endblock %}
 
@@ -52,32 +71,38 @@ $('#submit-playlist').on('click', function(event) {
     </div>
     <div class="card">
         <p class="heading">select a playlist</p>
-        <table id="playlist-input" class="table-input table clear">
-            <tr>
-                <th></th>
-                <th><p>name</p></th>
-                <th><p>owner</p></th>
-                <th><p>number of tracks</p></th>
-            </tr>
-            {% for item in playlists %}
-            <tr class="clickable-row" value="{{ item['id'] }}">
-                <td>
-                {% if item['images'][0] is defined %}
-                    <img src="{{ item['images'][0]['url'] }}">
-                {% endif %}
-                </td>
-                <td>
-                    <p>{{ item['name'] }}</p>
-                </td>
-                <td>
-                    <p>{{ item['owner']['id'] }}</p>
-                </td>
-                <td>
-                    <p>{{ item['tracks']['total'] }}</p>
-                </td>
-            </tr>
-            {% endfor %}
-        </table>
+        <div id="top-scroll-fade" class="scroller-fade scroller-fade-top"></div>
+        <div id="bottom-scroll-fade" class="scroller-fade scroller-fade-bottom"></div>
+            <table id="playlists-table" class="scrollable-table table-input classy-table table clear">
+                <thead>
+                    <tr>
+                        <th></th>
+                        <th><p>name</p></th>
+                        <th><p>owner</p></th>
+                        <th><p>number of tracks</p></th>
+                    </tr>
+                </thead>
+                <tbody id="playlists-body">
+                    {% for item in playlists %}
+                    <tr class="clickable-row" value="{{ item['id'] }}">
+                        <td>
+                        {% if item['images'][0] is defined %}
+                            <img src="{{ item['images'][0]['url'] }}">
+                        {% endif %}
+                        </td>
+                        <td>
+                            <p>{{ item['name'] }}</p>
+                        </td>
+                        <td>
+                            <p>{{ item['owner']['id'] }}</p>
+                        </td>
+                        <td>
+                            <p>{{ item['tracks']['total'] }}</p>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
         <a id="submit-playlist" type="button" class="btn btn-success btn-lg center submit-button">SUBMIT PLAYLIST</a>
         <div id="no-playlist-alert" class="alert">
             please select a playlist

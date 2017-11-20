@@ -79,9 +79,9 @@ hr {
 }
 
 /* ===========================================
- *          Playlist input selection
+ *          Custom tables
  * =========================================== */
-.table-input {
+.classy-table {
     margin-top: 10px;
 }
 
@@ -94,7 +94,7 @@ hr {
     background: #dedede;
 }
 
-.table-input tr > td, .table-input tr > th {
+.classy-table tr > td, .classy-table tr > th {
     font-size: 125%;
     vertical-align: middle !important;
     padding: 5px 0 5px 10px;
@@ -109,7 +109,7 @@ hr {
     width: 80px;
 }
 
-.table-input tr p {
+.classy-table tr p {
     margin: 0;
 }
 
@@ -171,12 +171,37 @@ hr {
 }
 
 /* ===========================================
- *              Scrollable content
+ *              Scrollable table
  * =========================================== */
-.scrollable {
+.scrollable-table tbody {
     overflow-y: auto;
-    height: 40em;
-    padding-top: 20px 0;
+    height: 35em;
+    table-layout: fixed;
+}
+
+.scrollable-table tbody > tr:first-child, .scrollable-table tbody > tr:first-child {
+    margin-top: 25px;
+}
+
+.scrollable-table tr:last-child {
+    margin-bottom: 25px;
+}
+
+.scrollable-table > thead {
+    display: table;
+    width: 100%;
+}
+
+.scrollable-table > tbody {
+    overflow-y: auto;
+    overflow-x: hidden;
+    display: block;
+}
+
+.scrollable-table > tbody tr {
+    display: table;
+    width: 100%;
+    table-layout: fixed;
 }
 
 .scroller-fade {
@@ -258,4 +283,18 @@ hr {
     max-width: 50em;
 }
 
+#playlists-table th:nth-child(1), #playlists-table td:nth-child(1) {
+    width: 20%;
+}
 
+#playlists-table th:nth-child(2), #playlists-table td:nth-child(2) {
+    width: 40%;
+}
+
+#playlists-table th:nth-child(3), #playlists-table td:nth-child(3) {
+    width: 20%;
+}
+
+#playlists-table th:nth-child(4), #playlists-table td:nth-child(4) {
+    width: 20%;
+}
