@@ -61,6 +61,12 @@ def tracks():
     playlist_id = request.args['pid']
     tracks_data = get_tracks(authorization_header, user_id, playlist_id)
 
+    # Get audio features
+    audio_feats = get_audio_features(authorization_header, tracks_data)['audio_features']
+
+    # Get statistics
+    stats = get_audio_stats(audio_feats)
+
     return render_template("tracks.html", tracks=tracks_data['items']);
 
 @app.route("/error")

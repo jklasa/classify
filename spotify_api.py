@@ -26,6 +26,7 @@ SPOTIFY_API_ENDPOINT = "{}/{}".format(SPOTIFY_API_BASE_URL, SPOTIFY_API_VERSION)
 PROFILE_ENDPOINT = SPOTIFY_API_ENDPOINT + "/me"
 PLAYLISTS_ENDPOINT = SPOTIFY_API_ENDPOINT + "/me/playlists"
 TRACKS_ENDPOINT = SPOTIFY_API_ENDPOINT + "/users/{uid}/playlists/{pid}/tracks"
+AUDIO_FEATURES_ENDPOINT = SPOTIFY_API_ENDPOINT + "/audio-features?ids={}"
 
 def get_auth_url(redirect_uri):
     auth_query_parameters = {
@@ -70,6 +71,44 @@ def get_playlists(auth_header):
 
 def get_tracks(auth_header, user_id, playlist_id):
     url = TRACKS_ENDPOINT.format(uid=user_id, pid=playlist_id)
-    print url
     return get_authorized(auth_header, url)
 
+def get_audio_features(auth_header, tracks_data):
+    tids = []
+    for track in tracks_data['items']:
+        tids.append(track['track']['id'])
+    csv_tids = ','.join(tids)
+
+    url = AUDIO_FEATURES_ENDPOINT.format(csv_tids)
+    return get_authorized(auth_header, url)
+
+def get_audio_stats(audio_feats):
+    stats = {
+        "acousticness": 0,
+        "danceability": 0,
+        "duration_ms": 0,
+        "energy": 0,
+        "key": 0,
+        "instrumentalness": 0,
+        "liveness": 0,
+        "loudness": 0,
+        "mode": 0,
+        "speechiness": 0,
+        "tempo": 0,
+        "time_signature": 0,
+        "valence": 0,
+        "num_tracks": 0
+    }
+
+    for track in audio_feats:
+        stats['num_tracks'] += 1
+        for feature in track:
+            if feature != 'type' and feature != 'id' and feature != 'uri' and feature != 'track_href' and feature != 'analysis_url':
+                stats[feature] += track[feature]
+
+    for feature in stats:
+        if feature != 'num_tracks':
+            stats[feature] /= stats['num_tracks']
+
+    print stats
+    return stats
