@@ -56,6 +56,9 @@
     </div>
     <div class="card vcard hcard right-card">
         <p class="heading">features</p>
+        {% for statistic in stats %}
+        <p>{{ statistic }}: {{ stats[statistic] }}</p>
+        {% endfor %}
         
     </div>
     <div class="card vcard hcard right-card">

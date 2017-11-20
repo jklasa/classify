@@ -110,5 +110,4 @@ def get_audio_stats(audio_feats):
         if feature != 'num_tracks':
             stats[feature] /= stats['num_tracks']
 
-    print stats
     return stats

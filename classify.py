@@ -67,7 +67,7 @@ def tracks():
     # Get statistics
     stats = get_audio_stats(audio_feats)
 
-    return render_template("tracks.html", tracks=tracks_data['items']);
+    return render_template("tracks.html", tracks=tracks_data['items'], stats=stats);
 
 @app.route("/error")
 def error():
