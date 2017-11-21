@@ -299,6 +299,10 @@ hr {
 .proportion-donut > svg {
     display: block;
     margin: auto;
+    -webkit-filter: drop-shadow( 0 3px 3px rgba(0,0,0,0.3) );
+    filter: drop-shadow( 0 3px 3px rgba(0,0,0,0.3) );
+    -ms-filter: "progid:DXImageTransform.Microsoft.Dropshadow(OffX=0, OffY=1, Color='#444')";
+    filter: "progid:DXImageTransform.Microsoft.Dropshadow(OffX=0, OffY=1, Color='#444')";
 }
 
 .proportion-donut .arc:nth-child(1) path {

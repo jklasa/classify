@@ -11,10 +11,6 @@ function donutChart(prop, id) {
         height = 80,
         radius = Math.min(width, height) / 2;
 
-/*    var color = d3.scale.ordinal()
-        .domain(data)
-        .range(["#ffff00", "#1ebfc5"]);*/
-
     var arc = d3.svg.arc()
         .outerRadius(radius)
         .innerRadius(radius - 15);
@@ -32,10 +28,13 @@ function donutChart(prop, id) {
     var g = svg.selectAll(".arc")
         .data(pie(data))
         .enter().append("g")
-        .attr("class", "arc");
-
-    g.append("path")
+        .attr("class", "arc")
+        .append("path")
         .attr("d", arc)
+        .append('title')
+        .text(function(d) {
+            return (d.value).toFixed(2) + "%";
+        });
 }
 
 {% for prop in props %}
@@ -66,7 +65,6 @@ donutChart({{ props[prop] }}, "{{ prop }}");
         {% for prop in props %}
         <div id="{{ prop }}" class="proportion-donut col-xs-4">
             <p class="larger-font">{{ prop }}</p>
-            <p>{{ props[prop] }}</p>
         </div>
         {% endfor %}
         <div class="col-xs-8">
