@@ -201,6 +201,21 @@ hr {
     table-layout: fixed;
 }
 
+.scrollable-table > tbody::-webkit-scrollbar-track {
+    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+    background-color: SCROLLBAR_COLOR;
+}
+
+.scrollable-table > tbody::-webkit-scrollbar {
+    width: 12px;
+    background-color: SCROLLBAR_COLOR;
+}
+
+.scrollable-table > tbody::-webkit-scrollbar-thumb {
+    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+    background-color: SCROLLBAR_THUMB_COLOR;
+}
+
 .scroller-fade {
     height: 30px;
     position: absolute;
@@ -213,11 +228,6 @@ hr {
 .scroller-fade-bottom {
     background: linear-gradient(to top, FG_COLOR_OPAQUE 0%, FG_COLOR_TRANSPARENT 100%);
 }
-
-/* ===========================================
- *              Scrollbar stuff
- * =========================================== */
-
 
 /* ===========================================
  *              Other classes
