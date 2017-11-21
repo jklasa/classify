@@ -4,7 +4,7 @@
 * {
     font-size: 100%;
     font-family: acherus_grotesqueregular;
-    color: #969696;
+    color: ALT_COLOR;
 }
 
 .xl-font {
@@ -27,14 +27,11 @@ html {
 body {
     margin: 0px;
     min-height: 100%;
-/*    background: #000000;
-    background: linear-gradient(-180deg, #BCC5CE 0%, #929EAD 98%), radial-gradient(at top left, rgba(255,255,255,0.30) 0%, rgba(0,0,0,0.30) 100%);
-    background-blend-mode: screen;*/
-    background: #BCC5CE;
+    background: BG_COLOR;
 }
 
 hr {
-    border-color: #cbcbcb;
+    border-color: LIGHT_ALT_COLOR;
     clear: both;
     margin: 5px 0px 5px 0px;
 }
@@ -43,39 +40,39 @@ hr {
  *              Classify button
  * =========================================== */
 .btn {
-    background-color: #2ebd59;
+    background-color: BTN_COLOR;
     border-radius: 30px;
     border: none;
 }
 
 .btn:hover {
     color: #fff;
-    background-color: #1ED760;
+    background-color: BTN_COLOR_HOVER;
 }
 
 .btn:focus, .btn:active, .btn.active, .btn:active:hover {
     color: #fff;
     outline: 0 none;
-    background-color: #29a54e;
+    background-color: ACCENT_COLOR;
 }
 
 /* ===========================================
  *                   Colors
  * =========================================== */
 .green {
-    color: #29a54e;
+    color: ACCENT_COLOR;
 }
 
 .dark-gray {
-    color: #999999;
+    color: DARK_ALT_COLOR;
 }
 
 .gray {
-    color: #969696;
+    color: ALT_COLOR;
 }
 
 .light-gray {
-    color: #cbcbcb;
+    color: LIGHT_ALT_COLOR;
 }
 
 /* ===========================================
@@ -91,7 +88,7 @@ hr {
 }
 
 .table-input tr.clickable-row:hover {
-    background: #dedede;
+    background: HOVER_COLOR;
 }
 
 .classy-table tr > td, .classy-table tr > th {
@@ -102,7 +99,7 @@ hr {
 }
 
 .table-input tr.active > td {
-    background-color: rgba(129, 212, 153, 0.75) !important
+    background-color: ACTIVE_COLOR !important
 }
 
 .table-input tr > td > img {
@@ -124,7 +121,7 @@ hr {
     font-size: 140%;
     text-align: center;
     padding: 20px;
-    background: rgb(160, 160, 160);
+    background: ALERT_COLOR;
 }
 
 .closebtn {
@@ -139,14 +136,14 @@ hr {
 }
 
 .closebtn:hover {
-    color: black;
+    color: ALERT_CLOSE_COLOR;
 }
 
 /* ===========================================
  *              Content cards
  * =========================================== */
 .card {
-    background: #f6f6f6;
+    background: FG_COLOR;
     border-radius: 20px;
     padding: 20px 30px;
     margin: 30px 0;
@@ -210,12 +207,17 @@ hr {
 }
 
 .scroller-fade-top {
-    background: linear-gradient(to bottom, rgba(246, 246, 246, 1) 0%, rgba(246, 246, 246, 0) 100%);
+    background: linear-gradient(to bottom, FG_COLOR_OPAQUE 0%, FG_COLOR_TRANSPARENT 100%);
 }
 
 .scroller-fade-bottom {
-    background: linear-gradient(to top, rgba(246, 246, 246, 1) 0%, rgba(246, 246, 246, 0) 100%);
+    background: linear-gradient(to top, FG_COLOR_OPAQUE 0%, FG_COLOR_TRANSPARENT 100%);
 }
+
+/* ===========================================
+ *              Scrollbar stuff
+ * =========================================== */
+
 
 /* ===========================================
  *              Other classes
@@ -273,7 +275,7 @@ hr {
  * =========================================== */
 #login-btn {
     margin-top: 5em;
-    max-width: 22em;;w
+    max-width: 22em;
 
 }
 
