@@ -1,6 +1,7 @@
 from flask import Flask, request, redirect, g, render_template, url_for
 from flask_bootstrap import Bootstrap
 from spotify_api import *
+from math import ceil
 
 app = Flask(__name__)
 Bootstrap(app)
@@ -76,7 +77,65 @@ def tracks():
     # Get statistics
     stats = get_audio_stats(audio_feats)
 
-    return render_template("tracks.html", tracks=tracks_data['items'], stats=stats);
+    # Separate the statistics into proportions
+    props = {
+             'acousticness': 0,
+             'danceability': 0,
+             'energy': 0,
+             'instrumentalness': 0,
+             'liveness': 0,
+             'speechiness': 0,
+             'valence': 0
+            }
+
+    def round_float(val):
+        return ceil(val * 10000.0) / 10000.0
+
+    for prop in props:
+        props[prop] = round_float(stats[prop])
+
+    # Format duration
+    seconds = (stats['duration_ms'] / 1000) % 60
+    seconds = int(seconds)
+    minutes = (stats['duration_ms'] / (1000 * 60)) % 60
+    minutes = int(minutes)
+    duration = "{} minutes, {} seconds".format(minutes, seconds)
+
+    # Pitch notation
+    pitches = ['C',
+               'C# or D\xe2',
+               'D',
+               'D# or E\xe2',
+               'E',
+               'F',
+               'F# or G\xe2',
+               'G',
+               'G# or A\xe2',
+               'A',
+               'A# or B\xe2',
+               'B']
+
+    pitch_idx = int(stats['key'])
+    if stats['mode'] < 0.5:
+        key = pitches[pitch_idx] + " minor"
+    else:
+        key = pitches[pitch_idx] + " major"
+
+    # Loudness
+    loudness = str(round_float(stats['loudness'])) + " dB"
+
+    # Time signature and tempo
+    time_sig = str(stats['time_signature'])
+    bpm =str(round_float(stats['tempo'])) 
+    time = time_sig + " beats per bar, " + bpm + " BPM"
+
+    return render_template("tracks.html",
+                           tracks=tracks_data['items'],
+                           props=props,
+                           duration=duration,
+                           key=key,
+                           loudness=loudness,
+                           time=time);
 
 @app.route("/error")
 def error():

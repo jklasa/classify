@@ -1,5 +1,49 @@
 {% extends "classy_table_base.html" %}
 
+{% block scripts %}
+{{ super() }}
+<script src="https://d3js.org/d3.v3.min.js"></script>
+<script>
+function donutChart(prop, id) {
+    var data = [prop*100, 100 - prop*100];
+
+    var width = 80,
+        height = 80,
+        radius = Math.min(width, height) / 2;
+
+/*    var color = d3.scale.ordinal()
+        .domain(data)
+        .range(["#ffff00", "#1ebfc5"]);*/
+
+    var arc = d3.svg.arc()
+        .outerRadius(radius)
+        .innerRadius(radius - 15);
+
+    var pie = d3.layout.pie()
+        .sort(null)
+        .value(function(d) { return d });
+
+    var svg = d3.select("#" + id).append("svg")
+        .attr("width", width)
+        .attr("height", height)
+        .append("g")
+        .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")");
+
+    var g = svg.selectAll(".arc")
+        .data(pie(data))
+        .enter().append("g")
+        .attr("class", "arc");
+
+    g.append("path")
+        .attr("d", arc)
+}
+
+{% for prop in props %}
+donutChart({{ props[prop] }}, "{{ prop }}");
+{% endfor %}
+</script>
+{% endblock %}
+
 {% block classy_content %}
 {{ super() }}
 <div class="card vcard left-card">
@@ -18,10 +62,20 @@
 </div>
 <div class="card vcard hcard right-card">
     <p class="heading">features</p>
-    {% for statistic in stats %}
-    <p>{{ statistic }}: {{ stats[statistic] }}</p>
-    {% endfor %}
-    
+    <div class="row">
+        {% for prop in props %}
+        <div id="{{ prop }}" class="proportion-donut col-xs-4">
+            <p class="larger-font">{{ prop }}</p>
+            <p>{{ props[prop] }}</p>
+        </div>
+        {% endfor %}
+        <div class="col-xs-8">
+            <p class="larger-font">duration: {{ duration }}</p>
+            <p class="larger-font">key: {{ key }}</p>
+            <p class="larger-font">loudness: {{ loudness }}</p>
+            <p class="larger-font">time: {{ time }}</p>
+        </div>
+    </div>
 </div>
 <div class="card vcard hcard right-card">
     <p class="heading">filter</p>

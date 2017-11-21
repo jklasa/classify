@@ -100,11 +100,21 @@ def get_audio_stats(audio_feats):
         "num_tracks": 0
     }
 
+    non_stats = ['type',
+                 'id',
+                 'uri',
+                 'track_href',
+                 'analysis_url']
+
     for track in audio_feats:
         stats['num_tracks'] += 1
         for feature in track:
-            if feature != 'type' and feature != 'id' and feature != 'uri' and feature != 'track_href' and feature != 'analysis_url':
+            def addStat():
+                for non_stat in non_stats:
+                    if feature == non_stat:
+                        return
                 stats[feature] += track[feature]
+            addStat()
 
     for feature in stats:
         if feature != 'num_tracks':

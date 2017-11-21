@@ -1,5 +1,9 @@
 {% extends "bootstrap/base.html" %}
 
+{% block title %}
+Classify
+{% endblock %}
+
 {% block styles %}
 {{ super() }}
 <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='css/post-classy.css') }}">
