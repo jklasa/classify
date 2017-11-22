@@ -84,19 +84,22 @@ def tracks():
              'energy': 0,
              'instrumentalness': 0,
              'liveness': 0,
+             'popularity': 0,
              'speechiness': 0,
              'valence': 0
             }
 
     def round_float(val):
-        return ceil(val * 10000.0) / 10000.0
+        return ceil(val * 10000.00) / 10000.00
 
     for prop in props:
-        props[prop] = round_float(stats[prop])
+        if prop != "popularity":
+            props[prop] = round_float(stats[prop])
 
     # Format duration
     seconds = (stats['duration_ms'] / 1000) % 60
     seconds = int(seconds)
+    seconds = str(seconds).zfill(2)
     minutes = (stats['duration_ms'] / (1000 * 60)) % 60
     minutes = int(minutes)
     duration = "{}:{}".format(minutes, seconds)
@@ -129,13 +132,25 @@ def tracks():
     bpm =str(round_float(stats['tempo'])) 
     time = time_sig + " beats per bar, " + bpm + " BPM"
 
+    # Popularity
+    popularity = 0
+    for track in tracks_data['items']:
+        popularity += track['track']['popularity']
+    popularity /= stats['num_tracks']
+    popularity /= 100.0
+    popularity = round_float(popularity)
+    props['popularity'] = popularity
+
+    print popularity
+
     return render_template("tracks.html",
                            tracks=tracks_data['items'],
                            props=props,
                            duration=duration,
                            key=key,
                            loudness=loudness,
-                           time=time);
+                           time=time,
+                           num_tracks=stats['num_tracks'])
 
 @app.route("/error")
 def error():
