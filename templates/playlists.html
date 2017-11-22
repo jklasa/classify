@@ -34,43 +34,47 @@ $('#submit-playlist').on('click', function(event) {
         showPlaylistAlert();
     } else {
         var redir = 'tracks?token=' + token + "&uid=" + uid + "&pid=" + pid;
-        window.location.replace(redir);
+        window.location = redir;
     }
 });
 </script>
 {% endblock %}
 
 {% block classy_content %}
-<div class="card">
-    <p class="heading">select a playlist
-        <table id="playlists-table" class="scrollable-table table-input classy-table table clear">
-            <thead>
-                <tr>
-                    <th></th>
-                    <th>name</th>
-                    <th>owner</th>
-                    <th>number of tracks</th>
-                </tr>
-            </thead>
-            <tbody id="table-body">
-                {% for item in playlists %}
-                <tr class="clickable-row" value="{{ item['id'] }},{{ item['owner']['id'] }}">
-                    <td>
-                    {% if item['images'][0] is defined %}
-                        <img src="{{ item['images'][0]['url'] }}">
-                    {% endif %}
-                    </td>
-                    <td>{{ item['name'] }}</td>
-                    <td>{{ item['owner']['id'] }}</td>
-                    <td>{{ item['tracks']['total'] }}</td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-    <a id="submit-playlist" type="button" class="btn btn-success btn-lg center submit-button">SUBMIT PLAYLIST</a>
-    <div id="no-playlist-alert" class="alert">
-        please select a playlist
-        <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
+<div class="row">
+    <div class="card col-xs-12">
+        <div class="card-content">
+            <p class="heading">select a playlist
+                <table id="playlists-table" class="scrollable-table table-input classy-table table clear">
+                    <thead id="table-head">
+                        <tr>
+                            <th></th>
+                            <th>name</th>
+                            <th>owner</th>
+                            <th>number of tracks</th>
+                        </tr>
+                    </thead>
+                    <tbody id="table-body">
+                        {% for item in playlists %}
+                        <tr class="clickable-row" value="{{ item['id'] }},{{ item['owner']['id'] }}">
+                            <td>
+                            {% if item['images'][0] is defined %}
+                                <img src="{{ item['images'][0]['url'] }}">
+                            {% endif %}
+                            </td>
+                            <td>{{ item['name'] }}</td>
+                            <td>{{ item['owner']['id'] }}</td>
+                            <td>{{ item['tracks']['total'] }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            <a id="submit-playlist" type="button" class="btn btn-success btn-lg center submit-button">SUBMIT PLAYLIST</a>
+            <div id="no-playlist-alert" class="alert">
+                please select a playlist
+                <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
+            </div>
+        </div>
     </div>
 </div>
 {% endblock %}

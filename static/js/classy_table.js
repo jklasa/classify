@@ -1,4 +1,4 @@
-function setScrollFades() {
+function setScrollWidths() {
   var destination = $('#table-body').offset();
   $('#top-scroll-fade').offset(destination);
 
@@ -11,8 +11,9 @@ function setScrollFades() {
   $('#table-body').append(helperDiv);
   $('#top-scroll-fade').width(helperDiv.width());
   $('#bottom-scroll-fade').width(helperDiv.width());
+  $('#table-head').width(helperDiv.width());
   helperDiv.remove();
 }
 
-setScrollFades();
-window.onresize = setScrollFades;
+window.onload = setScrollWidths;
+window.onresize = setScrollWidths;

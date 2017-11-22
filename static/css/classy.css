@@ -142,35 +142,24 @@ hr {
  *              Content cards
  * =========================================== */
 .card {
+    padding: 20px;
+}
+
+.card-content {
     background: FG_COLOR;
     border-radius: 20px;
     padding: 20px 30px;
-    margin: 20px 0;
     box-shadow: 0 4px 8px 0 gray;
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
-}
-
-.vcard {
-    width: 48%;
-}
-
-.hcard {
-    height: 45%;
-}
-
-.left-card {
-    float: left;
-}
-
-.right-card {
-    float: right;
 }
 
 /* ===========================================
  *              Scrollable table
  * =========================================== */
-.scrollable-table tbody {
+.scrollable-table > tbody {
     overflow-y: auto;
+    overflow-x: hidden;
+    display: block;
     height: 35em;
     table-layout: fixed;
 }
@@ -185,13 +174,6 @@ hr {
 
 .scrollable-table > thead {
     display: table;
-    width: 100%;
-}
-
-.scrollable-table > tbody {
-    overflow-y: auto;
-    overflow-x: hidden;
-    display: block;
 }
 
 .scrollable-table > tbody tr {
@@ -233,6 +215,7 @@ hr {
  * =========================================== */
 .container {
     width: 80%;
+    min-width: 60em;
 }
 
 .center {
