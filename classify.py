@@ -153,12 +153,6 @@ def tracks():
                            time=time,
                            num_tracks=stats['num_tracks'])
 
-@app.route("/error")
-def error():
-    error = request.args['error']
-    desc = request.args['desc']
-
-    return render_template("error.html", error=error, description=desc)
 
 def api_error_handler(data):
     error = data['error']
@@ -166,14 +160,18 @@ def api_error_handler(data):
     # Authentication error object
     if 'error_description' in data:
         desc = data['error_description']
-        err_args = "?error={}&desc={}".format(error, desc)
     else:
         desc = "{}: {}".format(error['status'], error['message'])
         error = "uh oh. we received an error code from spotify"
 
-    err_args = "?error={}&desc={}".format(error, desc)
-    return redirect(url_for("error") + err_args)
+    return render_template("error.html", error=error, description=desc)
 
+
+@app.errorhandler(404)
+def page_not_found(e):
+    error = "uh oh. we've encountered an error"
+    desc = "404 not found: the requested URL was not found on this server" 
+    return render_template('error.html', error=error, description=desc)
 
 if __name__ == "__main__":
     app.run(debug=True,port=PORT)
