@@ -82,8 +82,11 @@ hr {
     margin-top: 10px;
 }
 
-.table-input tr.clickable-row {
+.classy-table tr {
     height: 80px;
+}
+
+.table-input tr.clickable-row {
     cursor: pointer;
 }
 
@@ -102,12 +105,8 @@ hr {
     background-color: ACTIVE_COLOR !important
 }
 
-.table-input tr > td > img {
+.classy-table tr > td > img {
     width: 80px;
-}
-
-.classy-table tr p {
-    margin: 0;
 }
 
 /* ===========================================
@@ -232,6 +231,10 @@ hr {
 /* ===========================================
  *              Other classes
  * =========================================== */
+.container {
+    width: 80%;
+}
+
 .center {
     display: block;
     margin: auto;
@@ -342,4 +345,20 @@ hr {
 
 #playlists-table th:nth-child(4), #playlists-table td:nth-child(4) {
     width: 20%;
+}
+
+#tracks-table th:nth-child(1), #tracks-table td:nth-child(1) {
+    width: 10%;
+}
+
+#tracks-table th:nth-child(2), #tracks-table td:nth-child(2),
+#tracks-table th:nth-child(3), #tracks-table td:nth-child(3),
+#tracks-table th:nth-child(4), #tracks-table td:nth-child(4) {
+    width: 20%;
+}
+
+#tracks-table th:nth-child(5), #tracks-table td:nth-child(5),
+#tracks-table th:nth-child(6), #tracks-table td:nth-child(6),
+#tracks-table th:nth-child(7), #tracks-table td:nth-child(7) {
+    width: 10%;
 }

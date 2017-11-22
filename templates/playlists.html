@@ -42,16 +42,14 @@ $('#submit-playlist').on('click', function(event) {
 
 {% block classy_content %}
 <div class="card">
-    <p class="heading">select a playlist</p>
-    <div id="top-scroll-fade" class="scroller-fade scroller-fade-top"></div>
-    <div id="bottom-scroll-fade" class="scroller-fade scroller-fade-bottom"></div>
+    <p class="heading">select a playlist
         <table id="playlists-table" class="scrollable-table table-input classy-table table clear">
             <thead>
                 <tr>
                     <th></th>
-                    <th><p>name</p></th>
-                    <th><p>owner</p></th>
-                    <th><p>number of tracks</p></th>
+                    <th>name</th>
+                    <th>owner</th>
+                    <th>number of tracks</th>
                 </tr>
             </thead>
             <tbody id="table-body">
@@ -62,15 +60,9 @@ $('#submit-playlist').on('click', function(event) {
                         <img src="{{ item['images'][0]['url'] }}">
                     {% endif %}
                     </td>
-                    <td>
-                        <p>{{ item['name'] }}</p>
-                    </td>
-                    <td>
-                        <p>{{ item['owner']['id'] }}</p>
-                    </td>
-                    <td>
-                        <p>{{ item['tracks']['total'] }}</p>
-                    </td>
+                    <td>{{ item['name'] }}</td>
+                    <td>{{ item['owner']['id'] }}</td>
+                    <td>{{ item['tracks']['total'] }}</td>
                 </tr>
                 {% endfor %}
             </tbody>

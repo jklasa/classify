@@ -99,7 +99,7 @@ def tracks():
     seconds = int(seconds)
     minutes = (stats['duration_ms'] / (1000 * 60)) % 60
     minutes = int(minutes)
-    duration = "{} minutes, {} seconds".format(minutes, seconds)
+    duration = "{}:{}".format(minutes, seconds)
 
     # Pitch notation
     pitches = ['C',
