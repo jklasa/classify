@@ -45,84 +45,79 @@ donutChart({{ props[prop] }}, "{{ prop }}");
 
 {% block classy_content %}
 {{ super() }}
-<div class="row">
-    <div class="card col-xs-12">
-        <div class="card-content">
-            <p class="heading">tracks</p>
-            <table id="tracks-table" class="scrollable-table classy-table table clear">
-                <thead id="table-head">
-                    <tr>
-                        <th></th>
-                        <th>name</th>
-                        <th>album</th>
-                        <th>artist</th>
-                        <th>explicit</th>
-                        <th>duration</th>
-                        <th>popularity</th>
-                    </tr>
-                </thead>
-                <tbody id="table-body">
-                    {% for item in tracks %}
-                    <tr>
-                        <td>
-                        {% if item['track']['album']['images'][0] is defined %}
-                            <img src="{{ item['track']['album']['images'][0]['url'] }}">
+<div class="card col-xs-12">
+    <div class="card-content">
+        <p class="heading">tracks</p>
+        <table id="tracks-table" class="scrollable-table classy-table table clear">
+            <thead id="table-head">
+                <tr>
+                    <th></th>
+                    <th>name</th>
+                    <th>album</th>
+                    <th>artist</th>
+                    <th>explicit</th>
+                    <th>duration</th>
+                    <th>popularity</th>
+                </tr>
+            </thead>
+            <tbody id="table-body">
+                {% for item in tracks %}
+                <tr>
+                    <td>
+                    {% if item['track']['album']['images'][0] is defined %}
+                        <img src="{{ item['track']['album']['images'][0]['url'] }}">
+                    {% endif %}
+                    </td>
+                    <td>{{ item['track']['name'] }}</td>
+                    <td>{{ item['track']['album']['name'] }}</td>
+                    <td>
+                        {{ item['track']['artists']|join(', ', attribute='name') }}
+                    </td>
+                    <td>
+                        {% if item['track']['explicit']|string() == 'True' %}
+                        yes
+                        {% else %}
+                        no
                         {% endif %}
-                        </td>
-                        <td>{{ item['track']['name'] }}</td>
-                        <td>{{ item['track']['album']['name'] }}</td>
-                        <td>
-                            {{ item['track']['artists']|join(', ', attribute='name') }}
-                        </td>
-                        <td>
-                            {% if item['track']['explicit']|string() == 'True' %}
-                            yes
-                            {% else %}
-                            no
-                            {% endif %}
-                        </td>
-                        <td><script type="text/javascript">
-                            var millis = {{ item['track']['duration_ms'] }};
-                            var minutes = Math.floor(millis / 60000);
-                            var seconds = ((millis % 60000) / 1000).toFixed(0);
-                            document.write(minutes + ":" + (seconds < 10 ? '0' : '') + seconds);
-                        </script></td>
-                        <td>{{ item['track']['popularity'] }}</td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        </div>
-    </div>
-</div>
-<div class="row">
-    <div class="card col-xs-12 col-md-6">
-        <div class="card-content">
-            <p class="heading">features
-            <div class="row">
-                {% for prop in props %}
-                <div id="{{ prop }}" class="proportion-donut col-xs-4">
-                    <p class="larger-font">{{ prop }}
-                </div>
+                    </td>
+                    <td><script type="text/javascript">
+                        var millis = {{ item['track']['duration_ms'] }};
+                        var minutes = Math.floor(millis / 60000);
+                        var seconds = ((millis % 60000) / 1000).toFixed(0);
+                        document.write(minutes + ":" + (seconds < 10 ? '0' : '') + seconds);
+                    </script></td>
+                    <td>{{ item['track']['popularity'] }}</td>
+                </tr>
                 {% endfor %}
-            </div>
-        </div>
+            </tbody>
+        </table>
     </div>
-    <div class="card col-xs-12 col-md-6">
-        <div class="card-content">
-            <p class="heading">statistics</p>
-            <p class="larger-font">number of tracks: {{ num_tracks }}</p>
-            <p class="larger-font">duration: {{ duration }}</p>
-            <p class="larger-font">key: {{ key }}</p>
-            <p class="larger-font">loudness: {{ loudness }}</p>
-            <p class="larger-font">time: {{ time }}</p>
+</div>
+<div class="card col-xs-12 col-md-6">
+    <div class="card-content">
+        <p class="heading">features
+        <div class="row">
+            {% for prop in props %}
+            <div id="{{ prop }}" class="proportion-donut col-xs-4">
+                <p class="larger-font">{{ prop }}
+            </div>
+            {% endfor %}
         </div>
     </div>
 </div>
-<div class="card">
+<div class="card col-xs-12 col-md-6">
+    <div class="card-content">
+        <p class="heading">statistics</p>
+        <p class="larger-font">number of tracks: {{ num_tracks }}</p>
+        <p class="larger-font">duration: {{ duration }}</p>
+        <p class="larger-font">key: {{ key }}</p>
+        <p class="larger-font">loudness: {{ loudness }}</p>
+        <p class="larger-font">time: {{ time }}</p>
+    </div>
+</div>
+<div class="card col-xs-12">
     <div class="card-content">
         <p class="heading">classify</p>
     </div>
-
 </div>
 {% endblock %}

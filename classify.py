@@ -119,6 +119,7 @@ def tracks():
                'B']
 
     pitch_idx = int(stats['key'])
+    
     if stats['mode'] < 0.5:
         key = pitches[pitch_idx] + " minor"
     else:
