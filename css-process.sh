@@ -4,6 +4,12 @@
 # from the specified color palette
 echo -n "preprocessing css files... "
 
+if [ $# -ge 1 ]; then
+    PALETTE="color_palettes/${1}"
+else
+    PALETTE="color_palettes/default_palette.csv"
+fi
+
 DIR="static/css/"
 TEMP_FILE=".processing.tmp"
 PREFIX="post-"
@@ -30,7 +36,7 @@ for FILE in $CSS_FILES; do
         if [ ${INPUT} == ${FILE} ]; then
             INPUT=${PREFIX}${INPUT}
         fi
-    done < color_palette.csv
+    done < $PALETTE
 done
 
 rm ${DIR}${TEMP_FILE}
