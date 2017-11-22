@@ -47,7 +47,13 @@ donutChart({{ props[prop] }}, "{{ prop }}");
 {{ super() }}
 <div class="card col-xs-12">
     <div class="card-content">
-        <p class="heading">tracks</p>
+        <p class="heading">playlist</p><hr>
+        
+    </div>
+</div>
+<div class="card col-xs-12">
+    <div class="card-content">
+        <p class="heading">tracks</p><hr>
         <table id="tracks-table" class="scrollable-table classy-table table clear">
             <thead id="table-head">
                 <tr>
@@ -95,7 +101,7 @@ donutChart({{ props[prop] }}, "{{ prop }}");
 </div>
 <div class="card col-xs-12 col-md-6">
     <div class="card-content">
-        <p class="heading">features
+        <p class="heading">features</p><hr>
         <div class="row">
             {% for prop in props %}
             <div id="{{ prop }}" class="proportion-donut col-xs-4">
@@ -107,7 +113,7 @@ donutChart({{ props[prop] }}, "{{ prop }}");
 </div>
 <div class="card col-xs-12 col-md-6">
     <div class="card-content">
-        <p class="heading">statistics</p>
+        <p class="heading">statistics</p><hr>
         <p class="larger-font">number of tracks: {{ num_tracks }}</p>
         <p class="larger-font">duration: {{ duration }}</p>
         <p class="larger-font">key: {{ key }}</p>
@@ -117,7 +123,7 @@ donutChart({{ props[prop] }}, "{{ prop }}");
 </div>
 <div class="card col-xs-12">
     <div class="card-content">
-        <p class="heading">classify</p>
+        <p class="heading">classify</p><hr>
     </div>
 </div>
 {% endblock %}

@@ -31,9 +31,13 @@ body {
 }
 
 hr {
-    border-color: LIGHT_ALT_COLOR;
+    /*border-color: LIGHT_ALT_COLOR;*/
+    border: none;
+    color: BG_COLOR;
+    background-color: BG_COLOR;
+    height: 4px;
     clear: both;
-    margin: 5px 0px 5px 0px;
+    margin: 0 0 15px 0;
 }
 
 /* ===========================================
@@ -63,6 +67,10 @@ hr {
     color: ACCENT_COLOR;
 }
 
+.dark-white {
+    color: HEADING_COLOR;
+}
+
 .dark-gray {
     color: DARK_ALT_COLOR;
 }
@@ -82,7 +90,7 @@ hr {
     margin-top: 10px;
 }
 
-.classy-table tr {
+.classy-table > tbody > tr {
     height: 80px;
 }
 
@@ -245,6 +253,7 @@ hr {
 }
 
 .heading {
+    color: HEADING_COLOR;
     font-size: 250%;
     margin: 0;
 }
