@@ -47,14 +47,32 @@ donutChart({{ props[prop] }}, "{{ prop }}");
 {{ super() }}
 <div class="card col-xs-12">
     <div class="card-content">
-        <p class="heading">playlist</p><hr>
-        
+        <div class="row">
+            <div class="col-xs-11">
+                <p class="heading">playlist</p>
+            </div>
+            <div class="col-xs-1">
+                <p id="playlist-arrow" class="collapse-arrow" data-toggle="collapse" data-target="#playlist" onclick="toggle('#playlist-arrow')">&#9650</p>
+            </div>
+            <hr>
+        </div>
+        <div id="playlist" class="collapsable in">
+            <p> hello </p>
+        </div>
     </div>
 </div>
 <div class="card col-xs-12">
     <div class="card-content">
-        <p class="heading">tracks</p><hr>
-        <table id="tracks-table" class="scrollable-table classy-table table clear">
+        <div class="row">
+            <div class="col-xs-11">
+                <p class="heading">tracks</p>
+            </div>
+            <div class="col-xs-1">
+                <p id="tracks-arrow" class="collapse-arrow" data-toggle="collapse" data-target="#tracks-table" onclick="toggle('#tracks-arrow')">&#9650</p>
+            </div>
+            <hr>
+        </div>
+        <table id="tracks-table" class="scrollable-table classy-table table clear collapse in">
             <thead id="table-head">
                 <tr>
                     <th></th>
@@ -101,8 +119,17 @@ donutChart({{ props[prop] }}, "{{ prop }}");
 </div>
 <div class="card col-xs-12 col-md-6">
     <div class="card-content">
-        <p class="heading">features</p><hr>
         <div class="row">
+            <div class="col-xs-11">
+                <p class="heading">features</p>
+            </div>
+            <div class="col-xs-1">
+                <p id="feats-arrow" class="collapse-arrow" data-toggle="collapse" data-target="#features" onclick="toggle('#feats-arrow')">&#9650</p>
+            </div>
+            <hr>
+        </div>
+
+        <div id="features" class="row collapable in">
             {% for prop in props %}
             <div id="{{ prop }}" class="proportion-donut col-xs-4">
                 <p class="larger-font">{{ prop }}
@@ -113,12 +140,22 @@ donutChart({{ props[prop] }}, "{{ prop }}");
 </div>
 <div class="card col-xs-12 col-md-6">
     <div class="card-content">
-        <p class="heading">statistics</p><hr>
-        <p class="larger-font">number of tracks: {{ num_tracks }}</p>
-        <p class="larger-font">duration: {{ duration }}</p>
-        <p class="larger-font">key: {{ key }}</p>
-        <p class="larger-font">loudness: {{ loudness }}</p>
-        <p class="larger-font">time: {{ time }}</p>
+        <div class="row">
+            <div class="col-xs-11">
+                <p class="heading">statistics</p>
+            </div>
+            <div class="col-xs-1">
+                <p id="stats-arrow" class="collapse-arrow" data-toggle="collapse" data-target="#statistics" onclick="toggle('#stats-arrow')">&#9650</p>
+            </div>
+            <hr>
+        </div>
+        <div id="statistics" class="collapse in">
+            <p class="larger-font">number of tracks: {{ num_tracks }}</p>
+            <p class="larger-font">duration: {{ duration }}</p>
+            <p class="larger-font">key: {{ key }}</p>
+            <p class="larger-font">loudness: {{ loudness }}</p>
+            <p class="larger-font">time: {{ time }}</p>
+        </div>
     </div>
 </div>
 <div class="card col-xs-12">

@@ -1,4 +1,7 @@
 function setScrollWidths() {
+  $('#top-scroll-fade').appendTo('#table-body');
+  $('#bottom-scroll-fade').appendTo('#table-body');
+
   var destination = $('#table-body').offset();
   $('#top-scroll-fade').offset(destination);
 
