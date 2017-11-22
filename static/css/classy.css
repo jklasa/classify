@@ -162,7 +162,7 @@ hr {
 }
 
 .collapse-arrow {
-    text-align: right;
+    float: right;
     padding-top: 10px;
     font-size: 150%;
     display: block;

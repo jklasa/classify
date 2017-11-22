@@ -47,88 +47,65 @@ donutChart({{ props[prop] }}, "{{ prop }}");
 {{ super() }}
 <div class="card col-xs-12">
     <div class="card-content">
-        <div class="row">
-            <div class="col-xs-11">
-                <p class="heading">playlist</p>
-            </div>
-            <div class="col-xs-1">
-                <p id="playlist-arrow" class="collapse-arrow" data-toggle="collapse" data-target="#playlist" onclick="toggle('#playlist-arrow')">&#9650</p>
-            </div>
-            <hr>
-        </div>
+        {{ collapsable_heading("playlist") }}
         <div id="playlist" class="collapsable in">
-            <p> hello </p>
+            <p>hello</p>
         </div>
     </div>
 </div>
 <div class="card col-xs-12">
     <div class="card-content">
-        <div class="row">
-            <div class="col-xs-11">
-                <p class="heading">tracks</p>
-            </div>
-            <div class="col-xs-1">
-                <p id="tracks-arrow" class="collapse-arrow" data-toggle="collapse" data-target="#tracks-table" onclick="toggle('#tracks-arrow')">&#9650</p>
-            </div>
-            <hr>
-        </div>
-        <table id="tracks-table" class="scrollable-table classy-table table clear collapse in">
-            <thead id="table-head">
-                <tr>
-                    <th></th>
-                    <th>name</th>
-                    <th>album</th>
-                    <th>artist</th>
-                    <th>explicit</th>
-                    <th>duration</th>
-                    <th>popularity</th>
-                </tr>
-            </thead>
-            <tbody id="table-body">
-                {% for item in tracks %}
-                <tr>
-                    <td>
-                    {% if item['track']['album']['images'][0] is defined %}
-                        <img src="{{ item['track']['album']['images'][0]['url'] }}">
-                    {% endif %}
-                    </td>
-                    <td>{{ item['track']['name'] }}</td>
-                    <td>{{ item['track']['album']['name'] }}</td>
-                    <td>
-                        {{ item['track']['artists']|join(', ', attribute='name') }}
-                    </td>
-                    <td>
-                        {% if item['track']['explicit']|string() == 'True' %}
-                        yes
-                        {% else %}
-                        no
+        {{ collapsable_heading("tracks") }}
+        <div id="tracks">
+            <table id="tracks-table" class="scrollable-table classy-table table clear collapse in">
+                <thead id="table-head">
+                    <tr>
+                        <th></th>
+                        <th>name</th>
+                        <th>album</th>
+                        <th>artist</th>
+                        <th>explicit</th>
+                        <th>duration</th>
+                        <th>popularity</th>
+                    </tr>
+                </thead>
+                <tbody id="table-body">
+                    {% for item in tracks %}
+                    <tr>
+                        <td>
+                        {% if item['track']['album']['images'][0] is defined %}
+                            <img src="{{ item['track']['album']['images'][0]['url'] }}">
                         {% endif %}
-                    </td>
-                    <td><script type="text/javascript">
-                        var millis = {{ item['track']['duration_ms'] }};
-                        var minutes = Math.floor(millis / 60000);
-                        var seconds = ((millis % 60000) / 1000).toFixed(0);
-                        document.write(minutes + ":" + (seconds < 10 ? '0' : '') + seconds);
-                    </script></td>
-                    <td>{{ item['track']['popularity'] }}</td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+                        </td>
+                        <td>{{ item['track']['name'] }}</td>
+                        <td>{{ item['track']['album']['name'] }}</td>
+                        <td>
+                            {{ item['track']['artists']|join(', ', attribute='name') }}
+                        </td>
+                        <td>
+                            {% if item['track']['explicit']|string() == 'True' %}
+                            yes
+                            {% else %}
+                            no
+                            {% endif %}
+                        </td>
+                        <td><script type="text/javascript">
+                            var millis = {{ item['track']['duration_ms'] }};
+                            var minutes = Math.floor(millis / 60000);
+                            var seconds = ((millis % 60000) / 1000).toFixed(0);
+                            document.write(minutes + ":" + (seconds < 10 ? '0' : '') + seconds);
+                        </script></td>
+                        <td>{{ item['track']['popularity'] }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
     </div>
 </div>
 <div class="card col-xs-12 col-md-6">
     <div class="card-content">
-        <div class="row">
-            <div class="col-xs-11">
-                <p class="heading">features</p>
-            </div>
-            <div class="col-xs-1">
-                <p id="feats-arrow" class="collapse-arrow" data-toggle="collapse" data-target="#features" onclick="toggle('#feats-arrow')">&#9650</p>
-            </div>
-            <hr>
-        </div>
-
+        {{ collapsable_heading("features") }}
         <div id="features" class="row collapable in">
             {% for prop in props %}
             <div id="{{ prop }}" class="proportion-donut col-xs-4">
@@ -140,15 +117,7 @@ donutChart({{ props[prop] }}, "{{ prop }}");
 </div>
 <div class="card col-xs-12 col-md-6">
     <div class="card-content">
-        <div class="row">
-            <div class="col-xs-11">
-                <p class="heading">statistics</p>
-            </div>
-            <div class="col-xs-1">
-                <p id="stats-arrow" class="collapse-arrow" data-toggle="collapse" data-target="#statistics" onclick="toggle('#stats-arrow')">&#9650</p>
-            </div>
-            <hr>
-        </div>
+        {{ collapsable_heading("statistics") }}
         <div id="statistics" class="collapse in">
             <p class="larger-font">number of tracks: {{ num_tracks }}</p>
             <p class="larger-font">duration: {{ duration }}</p>

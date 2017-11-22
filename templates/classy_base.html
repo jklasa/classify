@@ -1,5 +1,30 @@
 {% extends "bootstrap/base.html" %}
 
+{% macro collapsable_heading(heading, target="") %}
+<div class="row">
+    <div class="col-xs-11">
+        <p class="heading">{{ heading }}</p>
+    </div>
+    <div class="col-xs-1">
+        {% if target|string() == "" %}
+        <p id="{{ heading }}-arrow" class="collapse-arrow" data-toggle="collapse" data-target="#{{ heading }}" onclick="toggle('#{{ heading }}-arrow')">&#9650</p>
+        {% else %}
+        <p id="{{ target }}-arrow" class="collapse-arrow" data-toggle="collapse" data-target="#{{ target }}" onclick="toggle('#{{ target }}-arrow')">&#9650</p>
+        {% endif %}
+    </div>
+    <hr>
+</div>
+{% endmacro %}
+
+{% macro heading(heading) %}
+<div class="row">
+    <div class="col-xs-12">
+        <p class="heading">{{ heading }}</p>
+    </div>
+    <hr>
+</div>
+{% endmacro %}
+
 {% block title %}
 Classify
 {% endblock %}
