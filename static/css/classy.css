@@ -239,6 +239,11 @@ hr {
     margin: auto;
 }
 
+.text-center {
+    text-align: center;
+    margin: 0;
+}
+
 .hidden {
     display: none;
 }
@@ -257,12 +262,10 @@ hr {
     float: left;
     font-size: 350%;
     margin: 0;
-    cursor: pointer;
 }
 
 .subtitle {
     font-size: 50%;
-    cursor: default;
 }
 
 .heading {
@@ -275,9 +278,17 @@ hr {
     margin: 0 !important;
 }
 
+.no-padding {
+    padding: 0;
+}
+
 .submit-button {
     margin-top: 40px;
     max-width: 30em;
+}
+
+.inline-row {
+    display: inline-block;
 }
 
 .blurred {
@@ -299,11 +310,6 @@ hr {
     margin-bottom: 10px;
 }
 
-.proportion-donut > p {
-    text-align: center;
-    margin: 0;
-}
-
 .proportion-donut > svg {
     display: block;
     margin: auto;
@@ -319,6 +325,25 @@ hr {
 
 .proportion-donut .arc:nth-child(2) path {
     fill: PROP_UNFILL_COLOR !important;
+}
+
+/* ===========================================
+ *              Slider customization
+ * =========================================== */
+.slider {
+    margin: 15px 0;
+}
+
+.slider-handle {
+    background: ACCENT_COLOR !important;
+}
+
+.slider-track {
+    background: DARK_ALT_COLOR !important;
+}
+
+.slider-selection {
+    background: ACCENT_COLOR !important;
 }
 
 /* ===========================================

@@ -38,14 +38,6 @@ Classify
 {% block scripts %}
 {{ super() }}
 <script>
-$(".title").click(function(e) {
-    if (e.target !== this) {
-        return;
-    }
-
-    window.location = "/";
-});
-
 function toggle(id) {
     $(id).text($(id).text() == '\ue114' ? '\ue113' : '\ue114');
 }
