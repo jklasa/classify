@@ -7,9 +7,9 @@
     </div>
     <div class="col-xs-1">
         {% if target|string() == "" %}
-        <p id="{{ heading }}-arrow" class="collapse-arrow" data-toggle="collapse" data-target="#{{ heading }}" onclick="toggle('#{{ heading }}-arrow')">&#9650</p>
+        <p id="{{ heading }}-arrow" class="collapse-arrow glyphicon" data-toggle="collapse" data-target="#{{ heading }}" onclick="toggle('#{{ heading }}-arrow')">&#xe113;</p>
         {% else %}
-        <p id="{{ target }}-arrow" class="collapse-arrow" data-toggle="collapse" data-target="#{{ target }}" onclick="toggle('#{{ target }}-arrow')">&#9650</p>
+        <p id="{{ target }}-arrow" class="collapse-arrow glyphicon" data-toggle="collapse" data-target="#{{ target }}" onclick="toggle('#{{ target }}-arrow')">&#xe113;</p>
         {% endif %}
     </div>
     <hr>
@@ -38,8 +38,16 @@ Classify
 {% block scripts %}
 {{ super() }}
 <script>
+$(".title").click(function(e) {
+    if (e.target !== this) {
+        return;
+    }
+
+    window.location = "/";
+});
+
 function toggle(id) {
-    $(id).text($(id).text() == '\u25B2' ? '\u25BC' : '\u25B2');
+    $(id).text($(id).text() == '\ue114' ? '\ue113' : '\ue114');
 }
 </script>
 {% endblock %}
@@ -49,10 +57,11 @@ function toggle(id) {
     <div class="row">
         <div class="card col-xs-12">
             <div class="card-content clearfix">
-                <p class="title dark-white">class</p>
-                <p class="title green">ify.</p>
+                <span class="title dark-white">class</span>
+                <span class="title green">ify.
+                    <small class="subtitle gray">audio classification for spotify</small>
+                </span>
                 <hr>
-                <p class="subtitle no-margin gray">audio classification for spotify</p>
             </div>
         </div>
 

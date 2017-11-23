@@ -239,6 +239,10 @@ hr {
     margin: auto;
 }
 
+.hidden {
+    display: none;
+}
+
 .clear {
     clear: both;
 }
@@ -253,11 +257,12 @@ hr {
     float: left;
     font-size: 350%;
     margin: 0;
+    cursor: pointer;
 }
 
 .subtitle {
-    float: left;
-    font-size: 200%;
+    font-size: 50%;
+    cursor: default;
 }
 
 .heading {
@@ -320,7 +325,7 @@ hr {
  *              Individual elements
  * =========================================== */
 #login-btn {
-    margin-top: 5em;
+    margin-top: 40px;
     max-width: 22em;
 
 }
@@ -329,6 +334,10 @@ hr {
     margin: auto;
     margin-top: 20% !important;
     max-width: 50em;
+}
+
+#login-card > hr {
+    margin: 0;
 }
 
 #playlists-table th:nth-child(1), #playlists-table td:nth-child(1) {

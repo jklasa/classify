@@ -18,6 +18,7 @@ def login():
     auth_url = get_auth_url(REDIRECT_URI + "/tokenrecv")
     return render_template("login.html", login_url=auth_url)
 
+
 @app.route("/tokenrecv")
 def tokenrecv():
     # Auth Step 4 and 5: Requests refresh and access tokens
