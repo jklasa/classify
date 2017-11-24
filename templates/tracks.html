@@ -1,10 +1,24 @@
 {% extends "classy_table_base.html" %}
 
-{% macro range_slider(name, min=0, max=1, step=0.01) %}
+{% macro measure_select(id) %}
+<div class="btn-group btn-group-justified">
+    <div class="btn-group">
+        <button id="{{ id }}-min-btn" type="button" class="btn btn-success center">MINIMUM</button>
+    </div>
+    <div class="btn-group">
+        <button id="{{ id }}-avg-btn" type="button" class="btn btn-success center">AVERAGE</button>
+    </div>
+    <div class="btn-group">
+        <button id="{{ id }}-max-btn" type="button" class="btn btn-success center">MAXIMUM</button>
+    </div>
+</div>
+{% endmacro %}
+
+{% macro range_slider(name, min_val=0, max_val=0, min=0, max=1, step=0.01) %}
 <div class="col-xs-4 text-center">
     <p class="larger-font text-center">{{ name }}</p>
     <div class="input-row">
-        {{ min }}
+        <span>{{ min }}</span>
         <input
             type="text"
             name="{{ name }}"
@@ -12,10 +26,10 @@
             data-slider-min="{{ min }}"
             data-slider-max="{{ max }}"
             data-slider-step="{{ step }}"
-            data-slider-value="[{{ min }}, {{ max }}]"
+            data-slider-value="[{{ min_val }}, {{ max_val }}]"
             data-slider-tooltip="{{ name }}"
         >
-        {{ max }}
+        <span>{{ max }}</span>
     </div>
 </div>
 {% endmacro %}
@@ -63,8 +77,32 @@ function donutChart(prop, id) {
         });
 }
 
+function switch_measure(id, measure) {
+    var measures = ['min', 'avg', 'max'];
+    var element = $('#' + id + '-' + measure);
+        for (var i = 0; i < measures.length; i++) {
+            var temp = $('#' + id + '-' + measures[i]).hide();
+            $('#' + id + '-' + measures[i] + '-btn').removeClass('green-bg');            
+        }
+
+        element.show();
+        $('#' + id + '-' + measure + '-btn').addClass('green-bg');
+}
+switch_measure('stats', 'avg');
+switch_measure('features', 'avg');
+
+{% for measure in props['energy'] %}
 {% for prop in props %}
-donutChart({{ props[prop] }}, "{{ prop }}");
+donutChart({{ props[prop][measure] }}, "{{ prop }}-{{ measure }}");
+{% endfor %}
+
+$("#stats-{{ measure }}-btn").click(function() {
+    switch_measure('stats', "{{ measure }}")
+});
+
+$("#features-{{ measure }}-btn").click(function() {
+    switch_measure('features', "{{ measure }}")
+});
 {% endfor %}
 </script>
 {% endblock %}
@@ -133,9 +171,14 @@ donutChart({{ props[prop] }}, "{{ prop }}");
     <div class="card-content">
         {{ collapsable_heading("features") }}
         <div id="features" class="row collapable in">
-            {% for prop in props %}
-            <div id="{{ prop }}" class="proportion-donut col-xs-4">
-                <p class="larger-font text-center">{{ prop }}
+            {{ measure_select("features") }}
+            {% for measure in props['energy'] %}
+            <div id="features-{{ measure }}">
+                {% for prop in props %}
+                <div id="{{ prop }}-{{ measure }}" class="{{ measure }}-features proportion-donut col-xs-4">
+                    <p class="larger-font text-center">{{ prop }}
+                </div>
+                {% endfor %}
             </div>
             {% endfor %}
         </div>
@@ -145,11 +188,16 @@ donutChart({{ props[prop] }}, "{{ prop }}");
     <div class="card-content">
         {{ collapsable_heading("statistics") }}
         <div id="statistics" class="collapse in">
-            <p class="larger-font">number of tracks: {{ num_tracks }}</p>
-            <p class="larger-font">duration: {{ duration }}</p>
-            <p class="larger-font">key: {{ key }}</p>
-            <p class="larger-font">loudness: {{ loudness }}</p>
-            <p class="larger-font">time: {{ time }}</p>
+            {{ measure_select("stats") }}
+            {% for measure in props['energy'] %}
+            <div id="stats-{{ measure }}">
+                <p class="larger-font">number of tracks: {{ num_tracks }}</p>
+                <p class="larger-font">duration: {{ duration[measure]['formatted'] }}</p>
+                <p class="larger-font">key: {{ key[measure] }}</p>
+                <p class="larger-font">loudness: {{ loudness[measure] }} dB</p>
+                <p class="larger-font">time: {{ beats[measure] }} beats per bar, {{ tempo[measure] }} BPM</p>
+            </div>
+            {% endfor %}
         </div>
     </div>
 </div>
@@ -158,12 +206,12 @@ donutChart({{ props[prop] }}, "{{ prop }}");
     {{ heading("classify") }}
         <div class="row">
         {% for prop in props %}
-        {{ range_slider(prop) }}
+        {{ range_slider(prop, props[prop]['min'], props[prop]['max']) }}
         {% endfor %}
-        {{ range_slider("duration", 0, 15, 1) }}
-        {{ range_slider("loudness", -60, 0, 1) }}
-        {{ range_slider("beats per bar", 0, 12, 1) }}
-        {{ range_slider("tempo", 0, 200, 1) }}
+        {{ range_slider("duration", duration['min']['value'], duration['max']['value'], 0, 900, 1) }}
+        {{ range_slider("loudness", loudness['min'], loudness['max'], -60, 0, 1) }}
+        {{ range_slider("beats per bar", beats['min'], beats['max'], 0, 12, 1) }}
+        {{ range_slider("tempo", tempo['min'], tempo['max'], 0, 200, 1) }}
         </div>
      </div>
 </div>

@@ -83,22 +83,8 @@ def get_audio_features(auth_header, tracks_data):
     return get_authorized(auth_header, url)
 
 def get_audio_stats(audio_feats):
-    stats = {
-        "acousticness": 0,
-        "danceability": 0,
-        "duration_ms": 0,
-        "energy": 0,
-        "key": 0,
-        "instrumentalness": 0,
-        "liveness": 0,
-        "loudness": 0,
-        "mode": 0,
-        "speechiness": 0,
-        "tempo": 0,
-        "time_signature": 0,
-        "valence": 0,
-        "num_tracks": 0
-    }
+    with open('audio_features.json') as json_data:
+        stats = json.load(json_data)
 
     non_stats = ['type',
                  'id',
@@ -106,18 +92,27 @@ def get_audio_stats(audio_feats):
                  'track_href',
                  'analysis_url']
 
+    first = True
     for track in audio_feats:
         stats['num_tracks'] += 1
         for feature in track:
-            def addStat():
+            def addStat(first):
                 for non_stat in non_stats:
                     if feature == non_stat:
                         return
-                stats[feature] += track[feature]
-            addStat()
+                stats[feature]['avg'] += track[feature]
+
+                if first or track[feature] > stats[feature]['max']:
+                    stats[feature]['max'] = track[feature]
+
+                if first or track[feature] < stats[feature]['min']:
+                    stats[feature]['min'] = track[feature]
+
+            addStat(first)
+        first = False
 
     for feature in stats:
         if feature != 'num_tracks':
-            stats[feature] /= stats['num_tracks']
+            stats[feature]['avg'] /= stats['num_tracks']
 
     return stats

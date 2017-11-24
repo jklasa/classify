@@ -60,6 +60,15 @@ hr {
     background-color: ACCENT_COLOR;
 }
 
+.green-bg {
+    background-color: ACCENT_COLOR;
+}
+
+.btn-group-justified {
+    margin: 0 auto 15px auto;
+    max-width: 25em;
+}
+
 /* ===========================================
  *                   Colors
  * =========================================== */
@@ -325,6 +334,21 @@ hr {
 
 .proportion-donut .arc:nth-child(2) path {
     fill: PROP_UNFILL_COLOR !important;
+}
+
+/* ===========================================
+ *              Slider inputs
+ * =========================================== */
+.input-row span {
+    vertical-align: middle;
+}
+
+.input-row span:first-child {
+    margin-right: 20px;
+}
+
+.input-row span:last-child {
+    margin-left: 20px;
 }
 
 /* ===========================================

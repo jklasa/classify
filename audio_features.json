@@ -1,0 +1,70 @@
+{
+    "acousticness": {
+        "min": 0,
+        "avg": 0,
+        "max": 0
+    },
+    "danceability": {
+        "min": 0,
+        "avg": 0,
+        "max": 0
+    },
+   "duration_ms": {
+        "min": 0,
+        "avg": 0,
+        "max": 0
+    },
+    "energy": {
+        "min": 0,
+        "avg": 0,
+        "max": 0
+    },
+    "key": {
+        "min": 0,
+        "avg": 0,
+        "max": 0
+    },
+    "instrumentalness":  {
+        "min": 0,
+        "avg": 0,
+        "max": 0
+    },
+    "liveness": {
+        "min": 0,
+        "avg": 0,
+        "max": 0
+    },
+    "loudness": {
+        "min": 0,
+        "avg": 0,
+        "max": 0
+    },
+    "mode": {
+        "min": 0,
+        "avg": 0,
+        "max": 0
+    },
+    "speechiness": {
+        "min": 0,
+        "avg": 0,
+        "max": 0
+    },
+    "tempo": {
+        "min": 0,
+        "avg": 0,
+        "max": 0
+    },
+    "time_signature": {
+        "min": 0,
+        "avg": 0,
+        "max": 0
+    },
+    "valence": {
+        "min": 0,
+        "avg": 0,
+        "max": 0
+    },
+    "num_tracks": 0
+}
+
+

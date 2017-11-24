@@ -78,32 +78,36 @@ def tracks():
     # Get statistics
     stats = get_audio_stats(audio_feats)
 
-    # Separate the statistics into proportions
-    props = {
-             'acousticness': 0,
-             'danceability': 0,
-             'energy': 0,
-             'instrumentalness': 0,
-             'liveness': 0,
-             'popularity': 0,
-             'speechiness': 0,
-             'valence': 0
-            }
-
     def round_float(val):
         return ceil(val * 10000.00) / 10000.00
 
-    for prop in props:
-        if prop != "popularity":
-            props[prop] = round_float(stats[prop])
-
     # Format duration
-    seconds = (stats['duration_ms'] / 1000) % 60
-    seconds = int(seconds)
-    seconds = str(seconds).zfill(2)
-    minutes = (stats['duration_ms'] / (1000 * 60)) % 60
-    minutes = int(minutes)
-    duration = "{}:{}".format(minutes, seconds)
+    def format_duration(millis):
+        seconds = (millis / 1000) % 60
+        seconds = int(seconds)
+        seconds = str(seconds).zfill(2)
+        minutes = (millis / (1000 * 60)) % 60
+        minutes = int(minutes)
+        return "{}:{}".format(minutes, seconds)
+
+    duration = {
+        "min": {
+            "value": 0,
+            "formatted": ""
+        },
+        "avg": {
+            "value": 0,
+            "formatted": ""
+        },
+        "max": {
+            "value": 0,
+            "formatted": ""
+        }
+    }
+
+    for measure in duration:
+        duration[measure]['value'] = round_float(stats['duration_ms'][measure] / 1000)
+        duration[measure]['formatted'] = format_duration(stats['duration_ms'][measure])
 
     # Pitch notation
     pitches = ['C',
@@ -119,40 +123,93 @@ def tracks():
                'A# or B\xe2',
                'B']
 
-    pitch_idx = int(stats['key'])
-    
-    if stats['mode'] < 0.5:
-        key = pitches[pitch_idx] + " minor"
-    else:
-        key = pitches[pitch_idx] + " major"
+    def format_key(key, mode):
+        pitch_idx = int(key)
+        
+        if mode < 0.5:
+            return pitches[pitch_idx] + " minor"
+        else:
+            return pitches[pitch_idx] + " major"
+
+    key = {
+        "min": 0,
+        "avg": 0,
+        "max": 0
+    }
+
+    for measure in key:
+        key[measure] = format_key(stats['key'][measure], stats['mode'][measure])
 
     # Loudness
-    loudness = str(round_float(stats['loudness'])) + " dB"
+    loudness = {
+        "min": 0,
+        "avg": 0,
+        "max": 0
+    }
+
+    for measure in loudness:
+        loudness[measure] = round_float(stats['loudness'][measure])
 
     # Time signature and tempo
-    time_sig = str(stats['time_signature'])
-    bpm =str(round_float(stats['tempo'])) 
-    time = time_sig + " beats per bar, " + bpm + " BPM"
+    beats = {
+        "min": 0,
+        "avg": 0,
+        "max": 0
+    }
+
+    tempo = {
+        "min": 0,
+        "avg": 0,
+        "max": 0
+    }
+
+    for measure in beats:
+        beats[measure] = stats['time_signature'][measure]
+        tempo[measure] = round_float(stats['tempo'][measure])
+
+    # Number of tracks
+    num_tracks = stats['num_tracks']
+
+    # Filter proportions out of stats
+    non_proportions = ['duration_ms', 'key', 'loudness', 'mode', 'tempo', 'time_signature', 'num_tracks']
+    for non_prop in non_proportions:
+        stats.pop(non_prop, None)
 
     # Popularity
-    popularity = 0
-    for track in tracks_data['items']:
-        popularity += track['track']['popularity']
-    popularity /= stats['num_tracks']
-    popularity /= 100.0
-    popularity = round_float(popularity)
-    props['popularity'] = popularity
+    popularity = {
+        "min": 0,
+        "avg": 0,
+        "max": 0
+    }
 
-    print popularity
+    first = True
+    for track in tracks_data['items']:
+        popularity['avg'] += track['track']['popularity']
+
+        if first or track['track']['popularity'] > popularity['max']:
+            popularity['max'] = track['track']['popularity']
+
+        if first or track['track']['popularity'] < popularity['min']:
+            popularity['min'] = track['track']['popularity']
+
+        if first:
+            first = False
+
+    popularity['avg'] /= num_tracks
+    popularity['avg'] = round_float(popularity['avg'])
+    for measure in popularity:
+        popularity[measure] /= 100.0
+    stats['popularity'] = popularity
 
     return render_template("tracks.html",
                            tracks=tracks_data['items'],
-                           props=props,
+                           props=stats,
                            duration=duration,
                            key=key,
                            loudness=loudness,
-                           time=time,
-                           num_tracks=stats['num_tracks'])
+                           beats=beats,
+                           tempo=tempo,
+                           num_tracks=num_tracks)
 
 
 def api_error_handler(data):
