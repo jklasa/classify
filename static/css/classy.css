@@ -40,6 +40,10 @@ hr {
     margin: 0 0 15px 0;
 }
 
+p {
+    font-size: 125%;
+}
+
 /* ===========================================
  *              Classify button
  * =========================================== */
@@ -124,6 +128,18 @@ hr {
 
 .classy-table tr > td > img {
     width: 80px;
+}
+
+.classy-table p {
+    word-break: break-all;
+}
+
+.inline-table {
+    width: auto;
+}
+
+.inline-table > tbody > tr {
+    height: auto;
 }
 
 /* ===========================================
@@ -341,14 +357,24 @@ hr {
  * =========================================== */
 .input-row span {
     vertical-align: middle;
+    min-width: 2em;
+    display: inline-block;
 }
 
 .input-row span:first-child {
-    margin-right: 20px;
+    margin-right: 10px;
 }
 
 .input-row span:last-child {
-    margin-left: 20px;
+    margin-left: 10px;
+}
+
+.tooltip-arrow {
+    border-top-color: BG_COLOR !important;
+}
+
+.tooltip-inner {
+    background-color: BG_COLOR;
 }
 
 /* ===========================================
@@ -419,4 +445,10 @@ hr {
 #tracks-table th:nth-child(6), #tracks-table td:nth-child(6),
 #tracks-table th:nth-child(7), #tracks-table td:nth-child(7) {
     width: 10%;
+}
+
+#playlist img {
+    width: 256px;
+    margin: 15px 25px 0 0;
+    float: left;
 }

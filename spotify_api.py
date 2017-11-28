@@ -25,7 +25,7 @@ SPOTIFY_API_VERSION = "v1"
 SPOTIFY_API_ENDPOINT = "{}/{}".format(SPOTIFY_API_BASE_URL, SPOTIFY_API_VERSION)
 PROFILE_ENDPOINT = SPOTIFY_API_ENDPOINT + "/me"
 PLAYLISTS_ENDPOINT = SPOTIFY_API_ENDPOINT + "/me/playlists"
-TRACKS_ENDPOINT = SPOTIFY_API_ENDPOINT + "/users/{uid}/playlists/{pid}/tracks"
+PLAYLIST_ENDPOINT = SPOTIFY_API_ENDPOINT + "/users/{uid}/playlists/{pid}"
 AUDIO_FEATURES_ENDPOINT = SPOTIFY_API_ENDPOINT + "/audio-features?ids={}"
 
 def get_auth_url(redirect_uri):
@@ -69,8 +69,8 @@ def get_playlists(auth_header):
     url = PLAYLISTS_ENDPOINT
     return get_authorized(auth_header, url)
 
-def get_tracks(auth_header, user_id, playlist_id):
-    url = TRACKS_ENDPOINT.format(uid=user_id, pid=playlist_id)
+def get_playlist(auth_header, user_id, playlist_id):
+    url = PLAYLIST_ENDPOINT.format(uid=user_id, pid=playlist_id)
     return get_authorized(auth_header, url)
 
 def get_audio_features(auth_header, tracks_data):

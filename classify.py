@@ -50,7 +50,10 @@ def playlists():
 
     # Get user playlist data
     playlist_data = get_playlists(authorization_header)
-    
+ 
+    if 'error' in playlist_data:
+        return api_error_handler(playlist_data)
+   
     # Display playlist data
     return render_template("playlists.html", playlists=playlist_data["items"])
 
@@ -61,16 +64,16 @@ def tracks():
     access_token = request.args['token']
     authorization_header = {"Authorization": "Bearer {}".format(access_token)}
 
-    # Get tracks from playlist
+    # Get playlist data
     user_id = request.args['uid']
     playlist_id = request.args['pid']
-    tracks_data = get_tracks(authorization_header, user_id, playlist_id)
+    playlist_data = get_playlist(authorization_header, user_id, playlist_id)
 
-    if 'error' in tracks_data:
-        return api_error_handler(tracks_data)
+    if 'error' in playlist_data:
+        return api_error_handler(playlist_data)
 
     # Get audio features
-    audio_feats = get_audio_features(authorization_header, tracks_data)['audio_features']
+    audio_feats = get_audio_features(authorization_header, playlist_data['tracks'])['audio_features']
 
     if 'error' in audio_feats:
         return api_error_handler(audio_feats)
@@ -183,7 +186,7 @@ def tracks():
     }
 
     first = True
-    for track in tracks_data['items']:
+    for track in playlist_data['tracks']['items']:
         popularity['avg'] += track['track']['popularity']
 
         if first or track['track']['popularity'] > popularity['max']:
@@ -202,7 +205,7 @@ def tracks():
     stats['popularity'] = popularity
 
     return render_template("tracks.html",
-                           tracks=tracks_data['items'],
+                           playlist=playlist_data,
                            props=stats,
                            duration=duration,
                            key=key,

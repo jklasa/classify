@@ -1,5 +1,17 @@
 {% extends "classy_table_base.html" %}
 
+{% macro convert(value, cond, one, two) %}
+{% if value|string() == cond %}
+{{ one }}
+{% else %}
+{{ two }}
+{% endif %}
+{% endmacro%}
+
+{% macro convert_boolean(bool) %}
+{{ convert(bool, "True", "yes", "no") }}
+{% endmacro %}
+
 {% macro measure_select(id) %}
 <div class="btn-group btn-group-justified">
     <div class="btn-group">
@@ -15,8 +27,8 @@
 {% endmacro %}
 
 {% macro range_slider(name, min_val=0, max_val=0, min=0, max=1, step=0.01) %}
-<div class="col-xs-4 text-center">
-    <p class="larger-font text-center">{{ name }}</p>
+<div class="col-xs-4 col-xl-3 text-center">
+    <p class="text-center">{{ name }}</p>
     <div class="input-row">
         <span>{{ min }}</span>
         <input
@@ -113,15 +125,49 @@ $("#features-{{ measure }}-btn").click(function() {
     <div class="card-content">
         {{ collapsable_heading("playlist") }}
         <div id="playlist" class="collapsable in">
-            <p>hello</p>
+            {% if playlist['images'][0] is defined %}
+                <img src="{{ playlist['images'][0]['url'] }}">
+            {% endif %}
+            <table class="classy-table inline-table table">
+                <tbody> 
+                    <tr>
+                        <td>name</td>
+                        <td>{{ playlist['name'] }}</td>
+                    </tr>
+                    <tr>
+                        <td>owner</td>
+                        <td>{{ playlist['owner']['id'] }}</td>
+                    </tr>
+                    <tr>
+                        <td>description</td>
+                        <td>{{ convert(playlist['description'], "None", "none", playlist['description']) }}</td>
+                    </tr>
+                    <tr>
+                        <td>number of tracks</td>
+                        <td>{{ num_tracks }}</td>
+                    </tr>
+                    <tr>
+                        <td>collaborative</td>
+                        <td>{{ convert_boolean(playlist['collaborative']) }}</td>
+                    </tr>
+                    <tr>
+                        <td>public</td>
+                        <td>{{ convert_boolean(playlist['public']) }}</td>
+                    </tr>
+                    <tr>
+                        <td>followers</td>
+                        <td>{{ playlist['followers']['total'] }}</td>
+                    </tr>
+               </tbody>
+            </table> 
         </div>
     </div>
 </div>
 <div class="card col-xs-12">
     <div class="card-content">
         {{ collapsable_heading("tracks") }}
-        <div id="tracks">
-            <table id="tracks-table" class="scrollable-table classy-table table clear collapse in">
+        <div id="tracks" class="collapse in">
+            <table id="tracks-table" class="scrollable-table classy-table table clear">
                 <thead id="table-head">
                     <tr>
                         <th></th>
@@ -134,7 +180,7 @@ $("#features-{{ measure }}-btn").click(function() {
                     </tr>
                 </thead>
                 <tbody id="table-body">
-                    {% for item in tracks %}
+                    {% for item in playlist['tracks']['items'] %}
                     <tr>
                         <td>
                         {% if item['track']['album']['images'][0] is defined %}
@@ -147,11 +193,7 @@ $("#features-{{ measure }}-btn").click(function() {
                             {{ item['track']['artists']|join(', ', attribute='name') }}
                         </td>
                         <td>
-                            {% if item['track']['explicit']|string() == 'True' %}
-                            yes
-                            {% else %}
-                            no
-                            {% endif %}
+                            {{ convert_boolean(item['track']['explicit']) }}
                         </td>
                         <td><script type="text/javascript">
                             var millis = {{ item['track']['duration_ms'] }};
@@ -167,7 +209,7 @@ $("#features-{{ measure }}-btn").click(function() {
         </div>
     </div>
 </div>
-<div class="card col-xs-12 col-md-6">
+<div class="card col-xs-12 col-md-7">
     <div class="card-content">
         {{ collapsable_heading("features") }}
         <div id="features" class="row collapable in">
@@ -175,8 +217,8 @@ $("#features-{{ measure }}-btn").click(function() {
             {% for measure in props['energy'] %}
             <div id="features-{{ measure }}">
                 {% for prop in props %}
-                <div id="{{ prop }}-{{ measure }}" class="{{ measure }}-features proportion-donut col-xs-4">
-                    <p class="larger-font text-center">{{ prop }}
+                <div id="{{ prop }}-{{ measure }}" class="{{ measure }}-features proportion-donut col-xs-4 col-lg-3">
+                    <p class="text-center">{{ prop }}
                 </div>
                 {% endfor %}
             </div>
@@ -184,18 +226,18 @@ $("#features-{{ measure }}-btn").click(function() {
         </div>
     </div>
 </div>
-<div class="card col-xs-12 col-md-6">
+<div class="card col-xs-12 col-md-5">
     <div class="card-content">
         {{ collapsable_heading("statistics") }}
         <div id="statistics" class="collapse in">
             {{ measure_select("stats") }}
             {% for measure in props['energy'] %}
             <div id="stats-{{ measure }}">
-                <p class="larger-font">number of tracks: {{ num_tracks }}</p>
-                <p class="larger-font">duration: {{ duration[measure]['formatted'] }}</p>
-                <p class="larger-font">key: {{ key[measure] }}</p>
-                <p class="larger-font">loudness: {{ loudness[measure] }} dB</p>
-                <p class="larger-font">time: {{ beats[measure] }} beats per bar, {{ tempo[measure] }} BPM</p>
+                <p>duration: {{ duration[measure]['formatted'] }}</p>
+                <p>key: {{ key[measure] }}</p>
+                <p>loudness: {{ loudness[measure] }} dB</p>
+                <p>beats per bar: {{ beats[measure] }}</p>
+                <p>tempo: {{ tempo[measure] }} BPM</p>
             </div>
             {% endfor %}
         </div>
