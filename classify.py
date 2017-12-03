@@ -163,22 +163,21 @@ def tracks():
     first = True
     feat = 'popularity'
     for track in playlist_data['tracks']['items']:
-        stats[feat]['avg'] += track['track']['popularity']
+        stats[feat]['measures']['avg'] += track['track']['popularity']
 
-        if first or track['track']['popularity'] > stats[feat]['max']:
-            stats[feat]['max'] = track['track']['popularity']
+        if first or track['track']['popularity'] > stats[feat]['measures']['max']:
+            stats[feat]['measures']['max'] = track['track']['popularity']
 
-        if first or track['track']['popularity'] < stats[feat]['min']:
-            stats[feat]['min'] = track['track']['popularity']
+        if first or track['track']['popularity'] < stats[feat]['measures']['min']:
+            stats[feat]['measures']['min'] = track['track']['popularity']
 
         if first:
             first = False
 
-    stats[feat]['avg'] /= stats['num_tracks']['val']
-    stats[feat]['avg'] = round_float(stats[feat]['avg'])
-    for measure in stats[feat]:
-        if measure != 'type':
-            stats[feat][measure] /= 100.0
+    stats[feat]['measures']['avg'] /= stats['num_tracks']['val']
+    stats[feat]['measures']['avg'] = round_float(stats[feat]['measures']['avg'])
+    for measure in stats[feat]['measures']:
+        stats[feat]['measures'][measure] /= 100.0
 
     resp = make_response(render_template("tracks.html",
                                          profile=profile_data,

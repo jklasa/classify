@@ -104,22 +104,22 @@ def get_audio_stats(audio_feats):
                 for non_stat in non_stats:
                     if feature == non_stat:
                         return
-                stats[feature]['avg'] += track[feature]
+                stats[feature]['measures']['avg'] += track[feature]
 
-                if first or track[feature] > stats[feature]['max']:
-                    stats[feature]['max'] = track[feature]
+                if first or track[feature] > stats[feature]['measures']['max']:
+                    stats[feature]['measures']['max'] = track[feature]
 
-                if first or track[feature] < stats[feature]['min']:
-                    stats[feature]['min'] = track[feature]
+                if first or track[feature] < stats[feature]['measures']['min']:
+                    stats[feature]['measures']['min'] = track[feature]
 
             addStat(first)
         first = False
 
     # Special duration handling
     feat = 'duration_ms'
-    stats[feat]['avg'] /= 1000
-    stats[feat]['min'] = floor(stats[feat]['min'] / 1000.0)
-    stats[feat]['max'] = ceil(stats[feat]['max'] / 1000.0)
+    stats[feat]['measures']['avg'] /= 1000
+    stats[feat]['measures']['min'] = floor(stats[feat]['measures']['min'] / 1000.0)
+    stats[feat]['measures']['max'] = ceil(stats[feat]['measures']['max'] / 1000.0)
 
     # Special key/mode handling
     pitches = ['C',
@@ -147,23 +147,22 @@ def get_audio_stats(audio_feats):
     def avg(value):
         return round_float(value / stats['num_tracks']['val'])
 
-    stats['duration_ms']['avg'] = avg(stats['duration_ms']['avg'])
-    stats['key']['avg'] = avg(stats['key']['avg'])
-    stats['loudness']['avg'] = avg(stats['loudness']['avg'])
-    stats['time_signature']['avg'] = stats['time_signature']['avg'] / stats['num_tracks']['val']
-    stats['tempo']['avg'] = avg(stats['tempo']['avg'])
+    stats['duration_ms']['measures']['avg'] = avg(stats['duration_ms']['measures']['avg'])
+    stats['key']['measures']['avg'] = avg(stats['key']['measures']['avg'])
+    stats['loudness']['measures']['avg'] = avg(stats['loudness']['measures']['avg'])
+    stats['time_signature']['measures']['avg'] = stats['time_signature']['measures']['avg'] / stats['num_tracks']['val']
+    stats['tempo']['measures']['avg'] = avg(stats['tempo']['measures']['avg'])
 
-    for measure in stats['key']:
-        if measure != 'type':
-            stats['key'][measure] = format_key(stats['key'][measure], stats['mode'][measure])
-            stats['loudness'][measure] = round_float(stats['loudness'][measure])
-            stats['time_signature'][measure] = stats['time_signature'][measure]
-            stats['tempo'][measure] = round_float(stats['tempo'][measure])
+    for measure in stats['key']['measures']:
+        stats['key']['measures'][measure] = format_key(stats['key']['measures'][measure], stats['mode']['measures'][measure])
+        stats['loudness']['measures'][measure] = round_float(stats['loudness']['measures'][measure])
+        stats['time_signature']['measures'][measure] = stats['time_signature']['measures'][measure]
+        stats['tempo']['measures'][measure] = round_float(stats['tempo']['measures'][measure])
 
     # Round proportions
     for feature in stats:
         if stats[feature]['type'] == 'prop':
-            stats[feature]['avg'] /= stats['num_tracks']['val']
-            stats[feature]['avg'] = round_float(stats[feature]['avg'])
+            stats[feature]['measures']['avg'] /= stats['num_tracks']['val']
+            stats[feature]['measures']['avg'] = round_float(stats[feature]['measures']['avg'])
 
     return stats

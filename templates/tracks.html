@@ -56,6 +56,53 @@
 <script src="{{ url_for('static',filename='js/bootstrap-slider.min.js') }}"></script>
 <script src="https://d3js.org/d3.v3.min.js"></script>
 <script>
+function histogram() {
+    var data = d3.range(1000).map(d3.randomBayes(10));
+
+    var formatCount = d3.format(",.0f");
+
+    var svg = d3.select("svg"),
+        margin = {top: 10, right: 30, bottom: 30, left: 30},
+        width = +svg.attr("width") - margin.left - margin.right,
+        height = +svg.attr("height") - margin.top - margin.bottom,
+        g = svg.append("g").attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+    var x = d3.scaleLinear()
+        .rangeRound([0, width]);
+
+    var bins = d3.histogram()
+        .domain(x.domain())
+        .thresholds(x.ticks(20))
+        (data);
+
+    var y = d3.scaleLinear()
+        .domain([0, d3.max(bins, function(d) { return d.length; })])
+        .range([height, 0]);
+
+    var bar = g.selectAll(".bar")
+      .data(bins)
+      .enter().append("g")
+        .attr("class", "bar")
+        .attr("transform", function(d) { return "translate(" + x(d.x0) + "," + y(d.length) + ")"; });
+
+    bar.append("rect")
+        .attr("x", 1)
+        .attr("width", x(bins[0].x1) - x(bins[0].x0) - 1)
+        .attr("height", function(d) { return height - y(d.length); });
+
+    bar.append("text")
+        .attr("dy", ".75em")
+        .attr("y", 6)
+        .attr("x", (x(bins[0].x1) - x(bins[0].x0)) / 2)
+        .attr("text-anchor", "middle")
+        .text(function(d) { return formatCount(d.length); });
+
+    g.append("g")
+        .attr("class", "axis axis--x")
+        .attr("transform", "translate(0," + height + ")")
+        .call(d3.axisBottom(x));
+}
+
 function donutChart(prop, id) {
     var data = [prop*100, 100 - prop*100];
 
@@ -103,22 +150,21 @@ function switch_measure(id, measure) {
 switch_measure('stats', 'avg');
 switch_measure('features', 'avg');
 
-{% for measure in stats['energy'] %}
-    {% if measure != 'type' %}
-        {% for stat in stats %}
-            {% if stats[stat]['type'] == 'prop' %}
-                donutChart({{ stats[stat][measure] }}, "{{ stat }}-{{ measure }}");
-            {% endif %}
-        {% endfor %}
+{% for measure in stats['energy']['measures'] %}
+    {% for stat in stats %}
+        {% if stats[stat]['type'] == 'prop' %}
+            donutChart({{ stats[stat]['measures'][measure] }}, "{{ stat }}-{{ measure }}");
+            //histogram({{ stats[stat] }}, "{{ stat }}-dist");
+        {% endif %}
+    {% endfor %}
 
-        $("#stats-{{ measure }}-btn").click(function() {
+    $("#stats-{{ measure }}-btn").click(function() {
         switch_measure('stats', "{{ measure }}")
-        });
+    });
 
-        $("#features-{{ measure }}-btn").click(function() {
+    $("#features-{{ measure }}-btn").click(function() {
         switch_measure('features', "{{ measure }}")
-        });
-    {% endif %}
+    });
 {% endfor %}
 </script>
 {% endblock %}
@@ -139,7 +185,7 @@ switch_measure('features', 'avg');
                 <table class="classy-table inline-table table">
                     <tbody> 
                         <tr>
-                            <td>name</td>
+                             <td>name</td>
                             <td>{{ playlist['name'] }}</td>
                         </tr>
                         <tr>
@@ -223,8 +269,7 @@ switch_measure('features', 'avg');
         {{ collapsable_heading("features") }}
         <div id="features" class="row collapable in">
             {{ measure_select("features") }}
-            {% for measure in stats['energy'] %}
-                {% if measure != 'type' %}
+            {% for measure in stats['energy']['measures'] %}
                 <div id="features-{{ measure }}">
                     {% for stat in stats %}
                         {% if stats[stat]['type'] == 'prop' %}
@@ -234,7 +279,6 @@ switch_measure('features', 'avg');
                         {% endif %}
                     {% endfor %}
                 </div>
-                {% endif %}
             {% endfor %}
         </div>
     </div>
@@ -244,38 +288,50 @@ switch_measure('features', 'avg');
         {{ collapsable_heading("statistics") }}
         <div id="statistics" class="collapse in">
             {{ measure_select("stats") }}
-            {% for measure in stats['energy'] %}
-                {% if measure != 'type' %}
-                <div id="stats-{{ measure }}">
-                    <table class="classy-table inline-table table">
-                        <tr>
-                            <td>duration</td>
-                            <td><script type="text/javascript">
-                                var total = {{ stats['duration_ms'][measure] }};
-                                var minutes = Math.floor(total / 60);
-                                var seconds = (total % 60).toFixed(0);
-                                document.write(minutes + ":" + (seconds < 10 ? '0' : '') + seconds);
-                            </script></td>
-                        </tr>
-                        <tr>
-                            <td>key</td>
-                            <td>{{ stats['key'][measure] }}</td>
-                        </tr>
-                        <tr>
-                            <td>tempo</td>
-                            <td>{{ stats['tempo'][measure] }} BPM</td>
-                        </tr>
-                        <tr>
-                            <td>beats per bar</td>
-                            <td>{{ stats['time_signature'][measure] }}</td>
-                        </tr>
-                        <tr>
-                            <td>loudness</td>
-                            <td>{{ stats['loudness'][measure] }} dB</td>
-                        </tr>
+            {% for measure in stats['energy']['measures'] %}
+            <div id="stats-{{ measure }}">
+                <table class="classy-table inline-table table">
+                    <tr>
+                        <td>duration</td>
+                        <td><script type="text/javascript">
+                            var total = {{ stats['duration_ms']['measures'][measure] }};
+                            var minutes = Math.floor(total / 60);
+                            var seconds = (total % 60).toFixed(0);
+                            document.write(minutes + ":" + (seconds < 10 ? '0' : '') + seconds);
+                        </script></td>
+                    </tr>
+                    <tr>
+                        <td>key</td>
+                        <td>{{ stats['key']['measures'][measure] }}</td>
+                    </tr>
+                    <tr>
+                        <td>tempo</td>
+                        <td>{{ stats['tempo']['measures'][measure] }} BPM</td>
+                    </tr>
+                    <tr>
+                        <td>beats per bar</td>
+                        <td>{{ stats['time_signature']['measures'][measure] }}</td>
+                    </tr>
+                    <tr>
+                        <td>loudness</td>
+                        <td>{{ stats['loudness']['measures'][measure] }} dB</td>
+                    </tr>
 
-                    </table>
-                </div>
+                </table>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+<div class="card col-xs-12">
+    <div class="card-content clearfix">
+        {{ collapsable_heading("distributions") }}
+        <div id="distributions">
+            {% for stat in stats %}
+                {% if stats[stat]['type'] == 'prop' %}
+                    <div id="{{ stat }}-dist">
+
+                    </div>
                 {% endif %}
             {% endfor %}
         </div>
@@ -288,13 +344,13 @@ switch_measure('features', 'avg');
             <div class="row">
             {% for stat in stats %}
                 {% if stats[stat]['type'] == 'prop' %}
-                    {{ range_slider(stat, stats[stat]['min'], stats[stat]['max']) }}
+                    {{ range_slider(stat, stats[stat]['measures']['min'], stats[stat]['measures']['max']) }}
                 {% endif %}
             {% endfor %}
-            {{ range_slider("duration", stats['duration_ms']['min'], stats['duration_ms']['max'], 0, 900, 1) }}
-            {{ range_slider("loudness", stats['loudness']['min'], stats['loudness']['max'], -60, 0, 1) }}
-            {{ range_slider("beats per bar", stats['time_signature']['min'], stats['time_signature']['max'], 0, 12, 1) }}
-            {{ range_slider("tempo", stats['tempo']['min'], stats['tempo']['max'], 0, 200, 1) }}
+            {{ range_slider("duration", stats['duration_ms']['measures']['min'], stats['duration_ms']['measures']['max'], 0, 900, 1) }}
+            {{ range_slider("loudness", stats['loudness']['measures']['min'], stats['loudness']['measures']['max'], -60, 0, 1) }}
+            {{ range_slider("beats per bar", stats['time_signature']['measures']['min'], stats['time_signature']['measures']['max'], 0, 12, 1) }}
+            {{ range_slider("tempo", stats['tempo']['measures']['min'], stats['tempo']['measures']['max'], 0, 200, 1) }}
             </div>
             <a type="button" class="btn btn-success center">FILTER</a>
         </div>

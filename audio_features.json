@@ -1,86 +1,128 @@
 {
     "acousticness": {
-        "min": 0,
-        "avg": 0,
-        "max": 0,
+    	"measures": {
+        	"min": 0,
+        	"avg": 0,
+        	"max": 0
+        },
+        "values": [],
         "type": "prop"
     },
     "danceability": {
-        "min": 0,
-        "avg": 0,
-        "max": 0,
+        "measures": {
+        	"min": 0,
+        	"avg": 0,
+        	"max": 0
+        },
+        "values": [],
         "type": "prop"
     },
    "duration_ms": {
-        "min": 0,
-        "avg": 0,
-        "max": 0,
+        "measures": {
+        	"min": 0,
+        	"avg": 0,
+        	"max": 0
+        },
+        "values": [],
         "type": "stat"
     },
     "energy": {
-        "min": 0,
-        "avg": 0,
-        "max": 0,
+        "measures": {
+        	"min": 0,
+        	"avg": 0,
+        	"max": 0
+        },
+        "values": [],
         "type": "prop"
     },
     "key": {
-        "min": 0,
-        "avg": 0,
-        "max": 0,
+        "measures": {
+        	"min": 0,
+        	"avg": 0,
+        	"max": 0
+        },
+        "values": [],
         "type": "prop"
     },
     "instrumentalness":  {
-        "min": 0,
-        "avg": 0,
-        "max": 0,
+        "measures": {
+        	"min": 0,
+        	"avg": 0,
+        	"max": 0
+        },
+        "values": [],
         "type": "prop"
     },
     "liveness": {
-        "min": 0,
-        "avg": 0,
-        "max": 0,
+        "measures": {
+        	"min": 0,
+        	"avg": 0,
+        	"max": 0
+        },
+        "values": [],
         "type": "prop"
     },
     "loudness": {
-        "min": 0,
-        "avg": 0,
-        "max": 0,
+        "measures": {
+        	"min": 0,
+        	"avg": 0,
+        	"max": 0
+        },
+        "values": [],
         "type": "prop"
     },
     "mode": {
-        "min": 0,
-        "avg": 0,
-        "max": 0,
+        "measures": {
+        	"min": 0,
+        	"avg": 0,
+        	"max": 0
+        },
+        "values": [],
         "type": "other"
     },
     "speechiness": {
-        "min": 0,
-        "avg": 0,
-        "max": 0,
+        "measures": {
+        	"min": 0,
+        	"avg": 0,
+        	"max": 0
+        },
+        "values": [],
         "type": "prop"
     },
     "tempo": {
-        "min": 0,
-        "avg": 0,
-        "max": 0,
+        "measures": {
+        	"min": 0,
+        	"avg": 0,
+        	"max": 0
+        },
+        "values": [],
         "type": "stat"
     },
     "time_signature": {
-        "min": 0,
-        "avg": 0,
-        "max": 0,
+        "measures": {
+        	"min": 0,
+        	"avg": 0,
+        	"max": 0
+        },
+        "values": [],
         "type": "stat"
     },
     "valence": {
-        "min": 0,
-        "avg": 0,
-        "max": 0,
+        "measures": {
+        	"min": 0,
+        	"avg": 0,
+        	"max": 0
+        },
+        "values": [],
         "type": "prop"
     },
     "popularity": {
-        "min": 0,
-        "avg": 0,
-        "max": 0,
+        "measures": {
+        	"min": 0,
+        	"avg": 0,
+        	"max": 0
+        },
+        "values": [],
         "type": "prop"
     },
     "num_tracks": {
@@ -88,21 +130,30 @@
         "type": "other"
     },
     "key": {
-        "min": 0,
-        "avg": 0,
-        "max": 0,
+        "measures": {
+        	"min": 0,
+        	"avg": 0,
+        	"max": 0
+        },
+        "values": [],
         "type": "stat"
     },
     "loudness": {
-        "min": 0,
-        "avg": 0,
-        "max": 0,
+        "measures": {
+        	"min": 0,
+        	"avg": 0,
+        	"max": 0
+        },
+        "values": [],
         "type": "stat"
     },
     "tempo": {
-        "min": 0,
-        "avg": 0,
-        "max": 0,
+        "measures": {
+        	"min": 0,
+        	"avg": 0,
+        	"max": 0
+        },
+        "values": [],
         "type": "stat"
     }
 }
