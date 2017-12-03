@@ -1,16 +1,18 @@
-from flask import Flask, request, redirect, g, render_template, url_for
+from flask import Flask, request, redirect, g, render_template, url_for, make_response
 from flask_bootstrap import Bootstrap
 from flask_mongoengine import MongoEngine
+from bson.objectid import ObjectId
 from spotify_api import *
 from math import ceil
+from pymongo import MongoClient
+from pymongo.collection import ReturnDocument
+import pymongo
 
 app = Flask(__name__)
 Bootstrap(app)
 
-app.config['MONGODB_SETTINGS'] = {
-    'db': 'classify'
-}
-db = MongoEngine(app)
+client = MongoClient('mongodb://localhost:27017')
+db = client['classify']
 
 # Server-side Parameters
 CLIENT_SIDE_URL = "http://127.0.0.1"
@@ -39,20 +41,63 @@ def tokenrecv():
     #token_type = response_data["token_type"]
     #expires_in = response_data["expires_in"]
 
-    return redirect(url_for("playlists") + "?token=" + access_token, 302)
+    auth_header = {"Authorization": "Bearer {}".format(access_token)}
+    profile_data = get_profile(auth_header)
+
+    if 'error' in profile_data:
+        return api_error_handler(profile_data)
+
+    if profile_data['images']:
+        avatar = profile_data['images'][0]
+    else:
+        avatar = None
+
+    profile = {
+        "id": profile_data['id'],
+        "token": access_token,
+        "followers": profile_data['followers']['total'],
+        "avatar": avatar,
+    }
+
+    entry = db.profiles.find_one_and_update(
+        {'id': profile_data['id']}, 
+        {'$set': profile}, 
+        upsert = True,
+        return_document=ReturnDocument.AFTER
+    )
+
+    resp = make_response(redirect(url_for("playlists") + "?id=" + str(entry['_id']), 302))
+    resp.set_cookie('token', access_token)
+    return resp
 
 
 @app.route("/playlists")
 def playlists():
-    # Auth Step 6: Use the access token to access Spotify API
-    access_token = request.args['token']
+    # Get profile data from database
+    user_id = request.args['id']
+    if not ObjectId.is_valid(user_id):
+        return api_error_handler({
+            "error": "invalid id",
+            "error_description": "oops. it looks like the url's id is invalid. try restarting"
+        })
+
+    profile_data = db.profiles.find_one({ '_id': ObjectId(user_id) })
+    if profile_data is None:
+        return api_error_handler({
+            "error": "unknown user",
+            "error_description": "uh oh. it looks like you might not be logged in. try logging in again"
+        })
+
+    # Verify that the client side token is equal to the database's token
+    client_token = request.cookies.get('token')
+    access_token = profile_data['token']
+    if client_token != access_token:
+        return api_error_handler({
+            "error": "unauthorized access",
+            "error_description": "we were unable to authenticate the account properly"
+        })
+
     authorization_header = {"Authorization": "Bearer {}".format(access_token)}
-
-    # Get profile data
-    profile_data = get_profile(authorization_header)
-
-    if 'error' in profile_data:
-        return api_error_handler(profile_data)
 
     # Get user playlist data
     playlist_data = get_playlists(authorization_header)
@@ -61,19 +106,46 @@ def playlists():
         return api_error_handler(playlist_data)
    
     # Display playlist data
-    return render_template("playlists.html", profile=profile_data, playlists=playlist_data["items"])
+    resp = make_response(render_template("playlists.html",
+                                         user_id=user_id,
+                                         profile=profile_data,
+                                         playlists=playlist_data["items"]))
+    resp.set_cookie('token', access_token)
+    return resp
 
 
 @app.route("/tracks")
 def tracks():
-    # Auth Step 6: Use the access token to access Spotify API
-    access_token = request.args['token']
+    # Get profile data from database
+    user_id = request.args['id']
+    if not ObjectId.is_valid(user_id):
+        return api_error_handler({
+            "error": "invalid id",
+            "error_description": "oops. it looks like the url's id is invalid. try restarting"
+        })
+
+    profile_data = db.profiles.find_one({ '_id': ObjectId(user_id) })
+    if profile_data is None:
+        return api_error_handler({
+            "error": "unknown user",
+            "error_description": "uh oh. it looks like you might not be logged in. try logging in again"
+        })
+
+    # Verify that the client side token is equal to the database's token
+    client_token = request.cookies.get('token')
+    access_token = profile_data['token']
+    if client_token != access_token:
+        return api_error_handler({
+            "error": "unauthorized access",
+            "error_description": "we were unable to authenticate the account properly"
+        })
+
     authorization_header = {"Authorization": "Bearer {}".format(access_token)}
 
     # Get playlist data
-    user_id = request.args['uid']
-    playlist_id = request.args['pid']
-    playlist_data = get_playlist(authorization_header, user_id, playlist_id)
+    playlist_id = request.args['playlist']
+    owner_id = request.args['owner']
+    playlist_data = get_playlist(authorization_header, owner_id, playlist_id)
 
     if 'error' in playlist_data:
         return api_error_handler(playlist_data)
@@ -108,9 +180,12 @@ def tracks():
         if measure != 'type':
             stats[feat][measure] /= 100.0
 
-    return render_template("tracks.html",
-                           playlist=playlist_data,
-                           stats=stats)
+    resp = make_response(render_template("tracks.html",
+                                         profile=profile_data,
+                                         playlist=playlist_data,
+                                         stats=stats))
+    resp.set_cookie('token', access_token)
+    return resp
 
 
 def api_error_handler(data):

@@ -1,15 +1,15 @@
 <div class="card col-xs-4">
     <div class="card-content user-profile">
-        {{ heading("user") }}
-        {% if profile['images'][0] is defined %}
-        <img class="img-responsive center img-circle" src="{{ profile['images'][0]['url'] }}">
+        {{ collapsable_heading("user") }}
+        {% if profile['avatar'] %}
+        <img class="img-responsive center img-circle" src="{{ profile['avatar'] }}">
         {% else %}
         <img class="img-responsive center img-circle" src="{{ url_for('static', filename='images/profile.png') }}">
         {% endif %}
         <p class="text-center">{{ profile['id'] }}</p>
         <p class="text-center">
-            {{ profile['followers']['total'] }}
-            {% if profile['followers']['total'] == 1 %}
+            {{ profile['followers'] }}
+            {% if profile['followers'] == 1 %}
             follower
             {% else %}
             followers

@@ -33,7 +33,7 @@ $('#submit-playlist').on('click', function(event) {
     if (vals == undefined || pid == undefined || uid == undefined) {
         showPlaylistAlert();
     } else {
-        var redir = 'tracks?token=' + token + "&uid=" + uid + "&pid=" + pid;
+        var redir = 'tracks?id=' + "{{ user_id }}" + "&playlist=" + pid + "&owner=" + uid;
         window.location = redir;
     }
 });
