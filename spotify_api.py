@@ -2,6 +2,7 @@ import base64
 import json
 import requests
 import urllib
+from math import ceil, floor
 
 # Client keys: must be stored in separate json file
 with open('spotify_secret.json') as json_data:
@@ -82,6 +83,9 @@ def get_audio_features(auth_header, tracks_data):
     url = AUDIO_FEATURES_ENDPOINT.format(csv_tids)
     return get_authorized(auth_header, url)
 
+def round_float(val):
+        return ceil(val * 10000.00) / 10000.00
+
 def get_audio_stats(audio_feats):
     with open('audio_features.json') as json_data:
         stats = json.load(json_data)
@@ -94,7 +98,7 @@ def get_audio_stats(audio_feats):
 
     first = True
     for track in audio_feats:
-        stats['num_tracks'] += 1
+        stats['num_tracks']['val'] += 1
         for feature in track:
             def addStat(first):
                 for non_stat in non_stats:
@@ -111,8 +115,55 @@ def get_audio_stats(audio_feats):
             addStat(first)
         first = False
 
+    # Special duration handling
+    feat = 'duration_ms'
+    stats[feat]['avg'] /= 1000
+    stats[feat]['min'] = floor(stats[feat]['min'] / 1000.0)
+    stats[feat]['max'] = ceil(stats[feat]['max'] / 1000.0)
+
+    # Special key/mode handling
+    pitches = ['C',
+               u'C# or D\u266D',
+               'D',
+               u'D# or E\u266D',
+               'E',
+               'F',
+               u'F# or G\u266D',
+               'G',
+               u'G# or A\u266D',
+               'A',
+               u'A# or B\u266D',
+               'B']
+
+    def format_key(key, mode):
+        pitch_idx = int(key)
+        
+        if mode < 0.5:
+            return pitches[pitch_idx] + " minor"
+        else:
+            return pitches[pitch_idx] + " major"
+
+    # Combine handling for loudness, key, beats, tempo
+    def avg(value):
+        return round_float(value / stats['num_tracks']['val'])
+
+    stats['duration_ms']['avg'] = avg(stats['duration_ms']['avg'])
+    stats['key']['avg'] = avg(stats['key']['avg'])
+    stats['loudness']['avg'] = avg(stats['loudness']['avg'])
+    stats['time_signature']['avg'] = stats['time_signature']['avg'] / stats['num_tracks']['val']
+    stats['tempo']['avg'] = avg(stats['tempo']['avg'])
+
+    for measure in stats['key']:
+        if measure != 'type':
+            stats['key'][measure] = format_key(stats['key'][measure], stats['mode'][measure])
+            stats['loudness'][measure] = round_float(stats['loudness'][measure])
+            stats['time_signature'][measure] = stats['time_signature'][measure]
+            stats['tempo'][measure] = round_float(stats['tempo'][measure])
+
+    # Round proportions
     for feature in stats:
-        if feature != 'num_tracks':
-            stats[feature]['avg'] /= stats['num_tracks']
+        if stats[feature]['type'] == 'prop':
+            stats[feature]['avg'] /= stats['num_tracks']['val']
+            stats[feature]['avg'] = round_float(stats[feature]['avg'])
 
     return stats

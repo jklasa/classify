@@ -142,6 +142,10 @@ p {
     height: auto;
 }
 
+.inline-table td {
+    padding-left: 15px !important;
+}
+
 /* ===========================================
  *              Alert display
  * =========================================== */
@@ -266,7 +270,6 @@ p {
 
 .text-center {
     text-align: center;
-    margin: 0;
 }
 
 .hidden {
@@ -381,6 +384,7 @@ p {
  *              Slider customization
  * =========================================== */
 .slider {
+    display: inline-block;
     margin: 15px 0;
 }
 
@@ -394,6 +398,18 @@ p {
 
 .slider-selection {
     background: ACCENT_COLOR !important;
+}
+
+/* ===========================================
+ *              User profile
+ * =========================================== */
+.user-profile img {
+    width: 150px;
+}
+
+.user-profile a {
+    max-width: 15em;
+    margin-top: 15px;
 }
 
 /* ===========================================
@@ -452,3 +468,4 @@ p {
     margin: 15px 25px 0 0;
     float: left;
 }
+

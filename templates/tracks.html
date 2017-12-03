@@ -103,25 +103,30 @@ function switch_measure(id, measure) {
 switch_measure('stats', 'avg');
 switch_measure('features', 'avg');
 
-{% for measure in props['energy'] %}
-{% for prop in props %}
-donutChart({{ props[prop][measure] }}, "{{ prop }}-{{ measure }}");
-{% endfor %}
+{% for measure in stats['energy'] %}
+    {% if measure != 'type' %}
+        {% for stat in stats %}
+            {% if stats[stat]['type'] == 'prop' %}
+                donutChart({{ stats[stat][measure] }}, "{{ stat }}-{{ measure }}");
+            {% endif %}
+        {% endfor %}
 
-$("#stats-{{ measure }}-btn").click(function() {
-    switch_measure('stats', "{{ measure }}")
-});
+        $("#stats-{{ measure }}-btn").click(function() {
+        switch_measure('stats', "{{ measure }}")
+        });
 
-$("#features-{{ measure }}-btn").click(function() {
-    switch_measure('features', "{{ measure }}")
-});
+        $("#features-{{ measure }}-btn").click(function() {
+        switch_measure('features', "{{ measure }}")
+        });
+    {% endif %}
 {% endfor %}
 </script>
 {% endblock %}
 
 {% block classy_content %}
 {{ super() }}
-<div class="card col-xs-12">
+{% include 'profile.html' %}
+<div class="card col-xs-8">
     <div class="card-content">
         {{ collapsable_heading("playlist") }}
         <div id="playlist" class="collapsable in">
@@ -144,7 +149,7 @@ $("#features-{{ measure }}-btn").click(function() {
                     </tr>
                     <tr>
                         <td>number of tracks</td>
-                        <td>{{ num_tracks }}</td>
+                        <td>{{ stats['num_tracks']['val'] }}</td>
                     </tr>
                     <tr>
                         <td>collaborative</td>
@@ -209,51 +214,82 @@ $("#features-{{ measure }}-btn").click(function() {
         </div>
     </div>
 </div>
-<div class="card col-xs-12 col-md-7">
+<div class="card col-xs-12 col-md-8">
     <div class="card-content">
         {{ collapsable_heading("features") }}
         <div id="features" class="row collapable in">
             {{ measure_select("features") }}
-            {% for measure in props['energy'] %}
-            <div id="features-{{ measure }}">
-                {% for prop in props %}
-                <div id="{{ prop }}-{{ measure }}" class="{{ measure }}-features proportion-donut col-xs-4 col-lg-3">
-                    <p class="text-center">{{ prop }}
+            {% for measure in stats['energy'] %}
+                {% if measure != 'type' %}
+                <div id="features-{{ measure }}">
+                    {% for stat in stats %}
+                        {% if stats[stat]['type'] == 'prop' %}
+                        <div id="{{ stat }}-{{ measure }}" class="{{ measure }}-features proportion-donut col-xs-4 col-lg-3">
+                            <p class="text-center">{{ stat }}
+                        </div>
+                        {% endif %}
+                    {% endfor %}
                 </div>
-                {% endfor %}
-            </div>
+                {% endif %}
             {% endfor %}
         </div>
     </div>
 </div>
-<div class="card col-xs-12 col-md-5">
+<div class="card col-xs-12 col-md-4">
     <div class="card-content">
         {{ collapsable_heading("statistics") }}
         <div id="statistics" class="collapse in">
             {{ measure_select("stats") }}
-            {% for measure in props['energy'] %}
-            <div id="stats-{{ measure }}">
-                <p>duration: {{ duration[measure]['formatted'] }}</p>
-                <p>key: {{ key[measure] }}</p>
-                <p>loudness: {{ loudness[measure] }} dB</p>
-                <p>beats per bar: {{ beats[measure] }}</p>
-                <p>tempo: {{ tempo[measure] }} BPM</p>
-            </div>
+            {% for measure in stats['energy'] %}
+                {% if measure != 'type' %}
+                <div id="stats-{{ measure }}">
+                    <table class="classy-table inline-table table">
+                        <tr>
+                            <td>duration</td>
+                            <td><script type="text/javascript">
+                                var total = {{ stats['duration_ms'][measure] }};
+                                var minutes = Math.floor(total / 60);
+                                var seconds = (total % 60).toFixed(0);
+                                document.write(minutes + ":" + (seconds < 10 ? '0' : '') + seconds);
+                            </script></td>
+                        </tr>
+                        <tr>
+                            <td>key</td>
+                            <td>{{ stats['key'][measure] }}</td>
+                        </tr>
+                        <tr>
+                            <td>tempo</td>
+                            <td>{{ stats['tempo'][measure] }} BPM</td>
+                        </tr>
+                        <tr>
+                            <td>beats per bar</td>
+                            <td>{{ stats['time_signature'][measure] }}</td>
+                        </tr>
+                        <tr>
+                            <td>loudness</td>
+                            <td>{{ stats['loudness'][measure] }} dB</td>
+                        </tr>
+
+                    </table>
+                </div>
+                {% endif %}
             {% endfor %}
         </div>
     </div>
 </div>
 <div class="card col-xs-12">
     <div class="card-content">
-    {{ heading("classify") }}
+    {{ collapsable_heading("classify") }}
         <div class="row">
-        {% for prop in props %}
-        {{ range_slider(prop, props[prop]['min'], props[prop]['max']) }}
+        {% for stat in stats %}
+            {% if stats[stat]['type'] == 'prop' %}
+                {{ range_slider(stat, stats[stat]['min'], stats[stat]['max']) }}
+            {% endif %}
         {% endfor %}
-        {{ range_slider("duration", duration['min']['value'], duration['max']['value'], 0, 900, 1) }}
-        {{ range_slider("loudness", loudness['min'], loudness['max'], -60, 0, 1) }}
-        {{ range_slider("beats per bar", beats['min'], beats['max'], 0, 12, 1) }}
-        {{ range_slider("tempo", tempo['min'], tempo['max'], 0, 200, 1) }}
+        {{ range_slider("duration", stats['duration_ms']['min'], stats['duration_ms']['max'], 0, 900, 1) }}
+        {{ range_slider("loudness", stats['loudness']['min'], stats['loudness']['max'], -60, 0, 1) }}
+        {{ range_slider("beats per bar", stats['time_signature']['min'], stats['time_signature']['max'], 0, 12, 1) }}
+        {{ range_slider("tempo", stats['tempo']['min'], stats['tempo']['max'], 0, 200, 1) }}
         </div>
      </div>
 </div>

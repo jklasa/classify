@@ -2,69 +2,108 @@
     "acousticness": {
         "min": 0,
         "avg": 0,
-        "max": 0
+        "max": 0,
+        "type": "prop"
     },
     "danceability": {
         "min": 0,
         "avg": 0,
-        "max": 0
+        "max": 0,
+        "type": "prop"
     },
    "duration_ms": {
         "min": 0,
         "avg": 0,
-        "max": 0
+        "max": 0,
+        "type": "stat"
     },
     "energy": {
         "min": 0,
         "avg": 0,
-        "max": 0
+        "max": 0,
+        "type": "prop"
     },
     "key": {
         "min": 0,
         "avg": 0,
-        "max": 0
+        "max": 0,
+        "type": "prop"
     },
     "instrumentalness":  {
         "min": 0,
         "avg": 0,
-        "max": 0
+        "max": 0,
+        "type": "prop"
     },
     "liveness": {
         "min": 0,
         "avg": 0,
-        "max": 0
+        "max": 0,
+        "type": "prop"
     },
     "loudness": {
         "min": 0,
         "avg": 0,
-        "max": 0
+        "max": 0,
+        "type": "prop"
     },
     "mode": {
         "min": 0,
         "avg": 0,
-        "max": 0
+        "max": 0,
+        "type": "other"
     },
     "speechiness": {
         "min": 0,
         "avg": 0,
-        "max": 0
+        "max": 0,
+        "type": "prop"
     },
     "tempo": {
         "min": 0,
         "avg": 0,
-        "max": 0
+        "max": 0,
+        "type": "stat"
     },
     "time_signature": {
         "min": 0,
         "avg": 0,
-        "max": 0
+        "max": 0,
+        "type": "stat"
     },
     "valence": {
         "min": 0,
         "avg": 0,
-        "max": 0
+        "max": 0,
+        "type": "prop"
     },
-    "num_tracks": 0
+    "popularity": {
+        "min": 0,
+        "avg": 0,
+        "max": 0,
+        "type": "prop"
+    },
+    "num_tracks": {
+        "val": 0,
+        "type": "other"
+    },
+    "key": {
+        "min": 0,
+        "avg": 0,
+        "max": 0,
+        "type": "stat"
+    },
+    "loudness": {
+        "min": 0,
+        "avg": 0,
+        "max": 0,
+        "type": "stat"
+    },
+    "tempo": {
+        "min": 0,
+        "avg": 0,
+        "max": 0,
+        "type": "stat"
+    }
 }
-
 

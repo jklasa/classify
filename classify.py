@@ -1,10 +1,16 @@
 from flask import Flask, request, redirect, g, render_template, url_for
 from flask_bootstrap import Bootstrap
+from flask_mongoengine import MongoEngine
 from spotify_api import *
 from math import ceil
 
 app = Flask(__name__)
 Bootstrap(app)
+
+app.config['MONGODB_SETTINGS'] = {
+    'db': 'classify'
+}
+db = MongoEngine(app)
 
 # Server-side Parameters
 CLIENT_SIDE_URL = "http://127.0.0.1"
@@ -55,7 +61,7 @@ def playlists():
         return api_error_handler(playlist_data)
    
     # Display playlist data
-    return render_template("playlists.html", playlists=playlist_data["items"])
+    return render_template("playlists.html", profile=profile_data, playlists=playlist_data["items"])
 
 
 @app.route("/tracks")
@@ -81,138 +87,30 @@ def tracks():
     # Get statistics
     stats = get_audio_stats(audio_feats)
 
-    def round_float(val):
-        return ceil(val * 10000.00) / 10000.00
-
-    # Format duration
-    def format_duration(millis):
-        seconds = (millis / 1000) % 60
-        seconds = int(seconds)
-        seconds = str(seconds).zfill(2)
-        minutes = (millis / (1000 * 60)) % 60
-        minutes = int(minutes)
-        return "{}:{}".format(minutes, seconds)
-
-    duration = {
-        "min": {
-            "value": 0,
-            "formatted": ""
-        },
-        "avg": {
-            "value": 0,
-            "formatted": ""
-        },
-        "max": {
-            "value": 0,
-            "formatted": ""
-        }
-    }
-
-    for measure in duration:
-        duration[measure]['value'] = round_float(stats['duration_ms'][measure] / 1000)
-        duration[measure]['formatted'] = format_duration(stats['duration_ms'][measure])
-
-    # Pitch notation
-    pitches = ['C',
-               'C# or D\xe2',
-               'D',
-               'D# or E\xe2',
-               'E',
-               'F',
-               'F# or G\xe2',
-               'G',
-               'G# or A\xe2',
-               'A',
-               'A# or B\xe2',
-               'B']
-
-    def format_key(key, mode):
-        pitch_idx = int(key)
-        
-        if mode < 0.5:
-            return pitches[pitch_idx] + " minor"
-        else:
-            return pitches[pitch_idx] + " major"
-
-    key = {
-        "min": 0,
-        "avg": 0,
-        "max": 0
-    }
-
-    for measure in key:
-        key[measure] = format_key(stats['key'][measure], stats['mode'][measure])
-
-    # Loudness
-    loudness = {
-        "min": 0,
-        "avg": 0,
-        "max": 0
-    }
-
-    for measure in loudness:
-        loudness[measure] = round_float(stats['loudness'][measure])
-
-    # Time signature and tempo
-    beats = {
-        "min": 0,
-        "avg": 0,
-        "max": 0
-    }
-
-    tempo = {
-        "min": 0,
-        "avg": 0,
-        "max": 0
-    }
-
-    for measure in beats:
-        beats[measure] = stats['time_signature'][measure]
-        tempo[measure] = round_float(stats['tempo'][measure])
-
-    # Number of tracks
-    num_tracks = stats['num_tracks']
-
-    # Filter proportions out of stats
-    non_proportions = ['duration_ms', 'key', 'loudness', 'mode', 'tempo', 'time_signature', 'num_tracks']
-    for non_prop in non_proportions:
-        stats.pop(non_prop, None)
-
-    # Popularity
-    popularity = {
-        "min": 0,
-        "avg": 0,
-        "max": 0
-    }
-
+    # Popularity comes from track data instead of audio features
     first = True
+    feat = 'popularity'
     for track in playlist_data['tracks']['items']:
-        popularity['avg'] += track['track']['popularity']
+        stats[feat]['avg'] += track['track']['popularity']
 
-        if first or track['track']['popularity'] > popularity['max']:
-            popularity['max'] = track['track']['popularity']
+        if first or track['track']['popularity'] > stats[feat]['max']:
+            stats[feat]['max'] = track['track']['popularity']
 
-        if first or track['track']['popularity'] < popularity['min']:
-            popularity['min'] = track['track']['popularity']
+        if first or track['track']['popularity'] < stats[feat]['min']:
+            stats[feat]['min'] = track['track']['popularity']
 
         if first:
             first = False
 
-    popularity['avg'] /= num_tracks
-    popularity['avg'] = round_float(popularity['avg'])
-    for measure in popularity:
-        popularity[measure] /= 100.0
-    stats['popularity'] = popularity
+    stats[feat]['avg'] /= stats['num_tracks']['val']
+    stats[feat]['avg'] = round_float(stats[feat]['avg'])
+    for measure in stats[feat]:
+        if measure != 'type':
+            stats[feat][measure] /= 100.0
 
     return render_template("tracks.html",
                            playlist=playlist_data,
-                           props=stats,
-                           duration=duration,
-                           key=key,
-                           loudness=loudness,
-                           beats=beats,
-                           tempo=tempo,
-                           num_tracks=num_tracks)
+                           stats=stats)
 
 
 def api_error_handler(data):
