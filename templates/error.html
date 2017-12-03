@@ -4,8 +4,12 @@
 <div class="card col-xs-12">
     <div class="card-content">
         {{ heading("error") }}
-        <h3>{{ error }}</h3>
-        <h3>{{ description }}</h3>
+        <div>
+            <img id="error-img" src="{{ url_for('static', filename='images/error.png') }}">
+            <p>{{ error }}</p>
+            <p>{{ description }}</p>
+        </div>
+        <a type="button" class="btn btn-success center" href="/">CLASSIFY HOME</a>
     </div>
 </div>
 {% endblock %}

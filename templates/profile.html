@@ -1,21 +1,23 @@
 <div class="card col-xs-4">
     <div class="card-content user-profile">
         {{ collapsable_heading("user") }}
-        {% if profile['avatar'] %}
-        <img class="img-responsive center img-circle" src="{{ profile['avatar'] }}">
-        {% else %}
-        <img class="img-responsive center img-circle" src="{{ url_for('static', filename='images/profile.png') }}">
-        {% endif %}
-        <p class="text-center">{{ profile['id'] }}</p>
-        <p class="text-center">
-            {{ profile['followers'] }}
-            {% if profile['followers'] == 1 %}
-            follower
+        <div id="user" class="collapse in">
+            {% if profile['avatar'] %}
+            <img class="img-responsive center img-circle" src="{{ profile['avatar'] }}">
             {% else %}
-            followers
+            <img class="img-responsive center img-circle" src="{{ url_for('static', filename='images/profile.png') }}">
             {% endif %}
-        </p>
-        <a type="button" class="btn btn-success center" href="/">LOGOUT</a>
+            <p class="text-center">{{ profile['id'] }}</p>
+            <p class="text-center">
+                {{ profile['followers'] }}
+                {% if profile['followers'] == 1 %}
+                follower
+                {% else %}
+                followers
+                {% endif %}
+            </p>
+            <a type="button" class="btn btn-success center" href="/">LOGOUT</a>
+        </div>
     </div>
 </div>
 

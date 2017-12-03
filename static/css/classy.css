@@ -51,6 +51,8 @@ p {
     background-color: BTN_COLOR;
     border-radius: 30px;
     border: none;
+    max-width: 22em;
+    margin-top: 15px;
 }
 
 .btn:hover {
@@ -99,10 +101,6 @@ p {
 /* ===========================================
  *          Custom tables
  * =========================================== */
-.classy-table {
-    margin-top: 10px;
-}
-
 .classy-table > tbody > tr {
     height: 80px;
 }
@@ -128,6 +126,7 @@ p {
 
 .classy-table tr > td > img {
     width: 80px;
+    box-shadow: 0px 3px 5px #111111;
 }
 
 .classy-table p {
@@ -265,7 +264,8 @@ p {
 
 .center {
     display: block;
-    margin: auto;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 .text-center {
@@ -386,6 +386,8 @@ p {
 .slider {
     display: inline-block;
     margin: 15px 0;
+    width: 65% !important;
+    min-width: 120px;
 }
 
 .slider-handle {
@@ -409,7 +411,6 @@ p {
 
 .user-profile a {
     max-width: 15em;
-    margin-top: 15px;
 }
 
 /* ===========================================
@@ -418,7 +419,6 @@ p {
 #login-btn {
     margin-top: 40px;
     max-width: 22em;
-
 }
 
 #login-card {
@@ -465,7 +465,14 @@ p {
 
 #playlist img {
     width: 256px;
-    margin: 15px 25px 0 0;
+    margin: 10px 30px 0 0;
     float: left;
+    box-shadow: 0px 3px 5px #111111;
 }
 
+#error-img {
+    width: 50px;
+    margin-top: 5px;
+    margin-right: 25px;
+    float: left;
+}
