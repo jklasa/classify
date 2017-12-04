@@ -382,17 +382,19 @@ $('#dist-select').on("select2:select", function(e) {
         {{ collapsable_heading("filter") }}
         <div id="filter" class="collapse in">
             <div class="row">
-            {% for stat in stats %}
-                {% if stats[stat]['type'] == 'prop' %}
-                    {{ range_slider(stat, stats[stat]['measures']['min'], stats[stat]['measures']['max']) }}
-                {% endif %}
-            {% endfor %}
-            {{ range_slider("duration", stats['duration_ms']['measures']['min'], stats['duration_ms']['measures']['max'], 0, 900, 1) }}
-            {{ range_slider("loudness", stats['loudness']['measures']['min'], stats['loudness']['measures']['max'], -60, 0, 1) }}
-            {{ range_slider("beats per bar", stats['time_signature']['measures']['min'], stats['time_signature']['measures']['max'], 0, 12, 1) }}
-            {{ range_slider("tempo", stats['tempo']['measures']['min'], stats['tempo']['measures']['max'], 0, 200, 1) }}
+                <form>
+                {% for stat in stats %}
+                    {% if stats[stat]['type'] == 'prop' %}
+                        {{ range_slider(stat, stats[stat]['measures']['min'], stats[stat]['measures']['max']) }}
+                    {% endif %}
+                {% endfor %}
+                {{ range_slider("duration", stats['duration_ms']['measures']['min'], stats['duration_ms']['measures']['max'], 0, 900, 1) }}
+                {{ range_slider("loudness", stats['loudness']['measures']['min'], stats['loudness']['measures']['max'], -60, 0, 1) }}
+                {{ range_slider("beats per bar", stats['time_signature']['measures']['min'], stats['time_signature']['measures']['max'], 0, 12, 1) }}
+                {{ range_slider("tempo", stats['tempo']['measures']['min'], stats['tempo']['measures']['max'], 0, 200, 1) }}
+            <a type="submit" class="btn btn-success center">FILTER</a>
+            </form>
             </div>
-            <a type="button" class="btn btn-success center">FILTER</a>
         </div>
     </div>
 </div>
