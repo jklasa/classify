@@ -7,8 +7,8 @@ Flask == 0.12.2
 # classify.py: 2
 Flask_Bootstrap == 3.3.7.1
 
-# classify.py: 3
-flask_mongoengine == 0.9.3
+# classify.py: 3,6,7,8
+pymongo == 3.5.1
 
 # spotify_api.py: 3
 requests == 2.2.1

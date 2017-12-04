@@ -84,7 +84,7 @@ def get_audio_features(auth_header, tracks_data):
     return get_authorized(auth_header, url)
 
 def round_float(val):
-        return ceil(val * 10000.00) / 10000.00
+        return ceil(val * 10000.0) / 10000.0
 
 def get_audio_stats(audio_feats):
     with open('audio_features.json') as json_data:
@@ -116,6 +116,11 @@ def get_audio_stats(audio_feats):
 
             addStat(first)
         first = False
+
+    if stats['num_tracks']['val'] == 0:
+        for feat in stats:
+            stats[feat]['val'] = 0
+        return stats
 
     # Special duration handling
     feat = 'duration_ms'
@@ -155,16 +160,24 @@ def get_audio_stats(audio_feats):
     stats['time_signature']['measures']['avg'] = stats['time_signature']['measures']['avg'] / stats['num_tracks']['val']
     stats['tempo']['measures']['avg'] = avg(stats['tempo']['measures']['avg'])
 
+    # Round down and up for mins and maxs
+    for feature in stats:
+        if (feature != 'num_tracks' and stats[feature]['type'] == 'prop'):
+            stats[feature]['measures']['min'] = floor(stats[feature]['measures']['min'] * 100.0) / 100.0
+            stats[feature]['measures']['max'] = ceil(stats[feature]['measures']['max'] * 100.0) / 100.0
+
+    stats['tempo']['measures']['min'] = floor(stats['tempo']['measures']['min'])
+    stats['tempo']['measures']['max'] = ceil(stats['tempo']['measures']['max'])
+    stats['loudness']['measures']['min'] = floor(stats['loudness']['measures']['min'])
+    stats['loudness']['measures']['max'] = ceil(stats['loudness']['measures']['max'])
+
     for measure in stats['key']['measures']:
         stats['key']['measures'][measure] = format_key(stats['key']['measures'][measure], stats['mode']['measures'][measure])
-        stats['loudness']['measures'][measure] = round_float(stats['loudness']['measures'][measure])
-        stats['time_signature']['measures'][measure] = stats['time_signature']['measures'][measure]
-        stats['tempo']['measures'][measure] = round_float(stats['tempo']['measures'][measure])
 
     # Round proportions
     for feature in stats:
         if stats[feature]['type'] == 'prop':
             stats[feature]['measures']['avg'] /= stats['num_tracks']['val']
-            stats[feature]['measures']['avg'] = round_float(stats[feature]['measures']['avg'])
+            stats[feature]['measures']['avg'] = round_float(stats[feature]['measures']['avg'])    
 
     return stats

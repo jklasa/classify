@@ -1,6 +1,6 @@
+import flask
 from flask import Flask, request, redirect, g, render_template, url_for, make_response
 from flask_bootstrap import Bootstrap
-from flask_mongoengine import MongoEngine
 from bson.objectid import ObjectId
 from spotify_api import *
 from math import ceil
@@ -53,27 +53,28 @@ def tokenrecv():
         avatar = None
 
     profile = {
-        "id": profile_data['id'],
-        "token": access_token,
-        "followers": profile_data['followers']['total'],
-        "avatar": avatar,
+        "profile": {
+            "followers": profile_data['followers']['total'],
+            "avatar": avatar
+        },
+        "token": access_token
     }
 
-    entry = db.profiles.find_one_and_update(
+    entry = db.users.find_one_and_update(
         {'id': profile_data['id']}, 
         {'$set': profile}, 
         upsert = True,
         return_document=ReturnDocument.AFTER
     )
 
-    resp = make_response(redirect(url_for("playlists") + "?id=" + str(entry['_id']), 302))
+    resp = make_response(redirect(url_for("playlists") + "?id=" + str(entry['_id']), 303))
     resp.set_cookie('token', access_token)
     return resp
 
 
 @app.route("/playlists")
 def playlists():
-    # Get profile data from database
+    # Get user data from database
     user_id = request.args['id']
     if not ObjectId.is_valid(user_id):
         return api_error_handler({
@@ -81,8 +82,8 @@ def playlists():
             "error_description": "oops. it looks like the url's id is invalid. try restarting"
         })
 
-    profile_data = db.profiles.find_one({ '_id': ObjectId(user_id) })
-    if profile_data is None:
+    user = db.users.find_one({ '_id': ObjectId(user_id) })
+    if user is None:
         return api_error_handler({
             "error": "unknown user",
             "error_description": "uh oh. it looks like you might not be logged in. try logging in again"
@@ -90,7 +91,7 @@ def playlists():
 
     # Verify that the client side token is equal to the database's token
     client_token = request.cookies.get('token')
-    access_token = profile_data['token']
+    access_token = user['token']
     if client_token != access_token:
         return api_error_handler({
             "error": "unauthorized access",
@@ -108,15 +109,15 @@ def playlists():
     # Display playlist data
     resp = make_response(render_template("playlists.html",
                                          user_id=user_id,
-                                         profile=profile_data,
+                                         profile=user['profile'],
                                          playlists=playlist_data["items"]))
     resp.set_cookie('token', access_token)
     return resp
 
 
-@app.route("/tracks")
+@app.route('/tracks', methods=['POST', 'GET'])
 def tracks():
-    # Get profile data from database
+    # Get user data from database
     user_id = request.args['id']
     if not ObjectId.is_valid(user_id):
         return api_error_handler({
@@ -124,8 +125,8 @@ def tracks():
             "error_description": "oops. it looks like the url's id is invalid. try restarting"
         })
 
-    profile_data = db.profiles.find_one({ '_id': ObjectId(user_id) })
-    if profile_data is None:
+    user = db.users.find_one({ '_id': ObjectId(user_id) })
+    if user is None:
         return api_error_handler({
             "error": "unknown user",
             "error_description": "uh oh. it looks like you might not be logged in. try logging in again"
@@ -133,7 +134,7 @@ def tracks():
 
     # Verify that the client side token is equal to the database's token
     client_token = request.cookies.get('token')
-    access_token = profile_data['token']
+    access_token = user['token']
     if client_token != access_token:
         return api_error_handler({
             "error": "unauthorized access",
@@ -149,20 +150,70 @@ def tracks():
 
     if 'error' in playlist_data:
         return api_error_handler(playlist_data)
-
+ 
     # Get audio features
-    audio_feats = get_audio_features(authorization_header, playlist_data['tracks'])['audio_features']
+    unfiltered_audio_feats = get_audio_features(authorization_header, playlist_data['tracks'])['audio_features']
 
-    if 'error' in audio_feats:
-        return api_error_handler(audio_feats)
+    if 'error' in unfiltered_audio_feats:
+        return api_error_handler(unfiltered_audio_feats)
+ 
+    # Filter if necessary
+    tracks = playlist_data['tracks']['items']
+    if flask.request.method == 'POST':
+        filter = request.form
 
-    # Get statistics
+        audio_feats = []
+        for track in unfiltered_audio_feats:
+            for entry in filter:
+                if entry != "popularity":
+                    add = True
+                    
+                    vals = filter[entry].split(",")
+                    min = float(vals[0])
+                    max = float(vals[1])
+
+                    if entry == "duration_ms":
+                        min *= 1000
+                        max *= 1000
+
+                    if (track[entry] < min or track[entry] > max):
+                        add = False
+                       
+                        for to_remove in tracks:
+                            if to_remove['track']['id'] == track['id']:
+                                tracks.remove(to_remove)
+
+                        break
+    
+            if add:
+                audio_feats.append(track)
+            
+
+        # Save filtered tracks to database
+        #entry = db.users.find_one_and_update(
+        #    {'id': profile_data['id']}, 
+        #    {'$set': profile}, 
+        #    upsert = True,
+        #    return_document=ReturnDocument.AFTER
+        #)
+    else:
+        audio_feats = unfiltered_audio_feats
+ 
+    # Get statistics from tracks
     stats = get_audio_stats(audio_feats)
 
     # Popularity comes from track data instead of audio features
     first = True
     feat = 'popularity'
-    for track in playlist_data['tracks']['items']:
+    for track in tracks:
+        if flask.request.method == 'POST':
+            vals = request.form['popularity'].split(",")
+            if (track['track']['popularity'] < float(vals[0]) * 100 or 
+                track['track']['popularity'] > float(vals[1]) * 100):
+
+                tracks.remove(track)
+                continue
+
         stats[feat]['values'].append(track['track']['popularity'] / 100.0)
         stats[feat]['measures']['avg'] += track['track']['popularity']
 
@@ -175,15 +226,23 @@ def tracks():
         if first:
             first = False
 
-    stats[feat]['measures']['avg'] /= stats['num_tracks']['val']
-    stats[feat]['measures']['avg'] = round_float(stats[feat]['measures']['avg'])
-    for measure in stats[feat]['measures']:
-        stats[feat]['measures'][measure] /= 100.0
+    if stats['num_tracks']['val'] != 0:
+        stats[feat]['measures']['avg'] /= stats['num_tracks']['val']
+        stats[feat]['measures']['avg'] = round_float(stats[feat]['measures']['avg'])
+        for measure in stats[feat]['measures']:
+            stats[feat]['measures'][measure] /= 100.0
+
+    tracks_url = "/tracks?id={}&playlist={}&owner={}".format(user_id, playlist_id, owner_id)
+    playlists_url = "/playlists?id={}".format(user_id)
 
     resp = make_response(render_template("tracks.html",
-                                         profile=profile_data,
+                                         profile=user['profile'],
                                          playlist=playlist_data,
-                                         stats=stats))
+                                         tracks=tracks,
+                                         stats=stats,
+                                         tracks_url=tracks_url,
+                                         playlists_url=playlists_url,
+                                         filtered=(flask.request.method == 'POST')))
     resp.set_cookie('token', access_token)
     return resp
 

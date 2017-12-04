@@ -376,8 +376,13 @@ p {
 }
 
 .submit-button {
-    margin-top: 40px;
+    margin-top: 25px;
     max-width: 30em;
+}
+
+.filter-button {
+    margin-top: 20px;
+    min-width: 20em;
 }
 
 .inline-row {
@@ -467,11 +472,12 @@ p {
 }
 
 .tooltip-arrow {
-    border-top-color: BG_COLOR !important;
+    border-top-color: DARK_ALT_COLOR !important;
 }
 
 .tooltip-inner {
-    background-color: BG_COLOR;
+    background-color: DARK_ALT_COLOR;
+    color: white;
 }
 
 /* ===========================================
@@ -559,10 +565,10 @@ p {
 
 #playlist img {
     width: 256px;
-    margin: 10px 30px 0 0;
-    float: left;
     box-shadow: 0px 3px 5px #111111;
 }
+
+#playlist 
 
 #error-img {
     width: 50px;
