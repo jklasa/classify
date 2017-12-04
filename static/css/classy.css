@@ -312,6 +312,7 @@ p {
 .container {
     width: 80%;
     min-width: 60em;
+    max-width: 1200px;
 }
 
 .center {
@@ -413,6 +414,31 @@ p {
 
 .bar rect {
     fill: ACCENT_COLOR !important;
+    -webkit-filter: drop-shadow( 0 3px 3px rgba(0,0,0,0.3) );
+    filter: drop-shadow( 0 3px 3px rgba(0,0,0,0.3) );
+    -ms-filter: "progid:DXImageTransform.Microsoft.Dropshadow(OffX=0, OffY=1, Color='#444')";
+    filter: "progid:DXImageTransform.Microsoft.Dropshadow(OffX=0, OffY=1, Color='#444')";
+}
+
+#histograms {
+    height: 30em;
+    width: 100%;
+}
+
+.histogram {
+    margin-top: 30px;
+    width: 100%;
+    height: 100%;
+}
+
+.histogram svg {
+    width: 100%;
+    height: 100%;
+    padding-top: 10px;
+}
+
+.histogram text {
+    fill: ALT_COLOR;
 }
 
 /* ===========================================

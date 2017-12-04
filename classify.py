@@ -163,6 +163,7 @@ def tracks():
     first = True
     feat = 'popularity'
     for track in playlist_data['tracks']['items']:
+        stats[feat]['values'].append(track['track']['popularity'] / 100.0)
         stats[feat]['measures']['avg'] += track['track']['popularity']
 
         if first or track['track']['popularity'] > stats[feat]['measures']['max']:
