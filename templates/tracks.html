@@ -78,7 +78,6 @@ function histogram(data, id) {
         .domain(x.domain())
         .thresholds(x.ticks(20))
         (data);
-    console.log(bins);
 
     var y = d3.scaleLinear()
         .domain([0, d3.max(bins, function(d) { return d.length; })])

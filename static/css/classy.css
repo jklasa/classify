@@ -150,6 +150,10 @@ p {
     background-color: ACCENT_COLOR !important;
 }
 
+.select2-results__option[aria-selected=true].select2-results__option--highlighted {
+    color: HOVER_FONT_COLOR;
+}
+
 /* ===========================================
  *          Custom tables
  * =========================================== */
@@ -173,7 +177,8 @@ p {
 }
 
 .table-input tr.active > td {
-    background-color: ACTIVE_COLOR !important
+    background-color: ACTIVE_COLOR !important;
+    color: white;
 }
 
 .classy-table tr > td > img {
@@ -313,6 +318,10 @@ p {
     width: 80%;
     min-width: 60em;
     max-width: 1200px;
+}
+
+.upper-tabbed {
+    margin-top: 15px;
 }
 
 .center {
@@ -559,6 +568,13 @@ p {
 #error-img {
     width: 50px;
     margin-top: 5px;
+    margin-right: 25px;
+    float: left;
+}
+
+#icon-img {
+    width: 128px;
+    margin-top: 10px;
     margin-right: 25px;
     float: left;
 }
