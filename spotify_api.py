@@ -104,6 +104,7 @@ def get_audio_stats(audio_feats):
                 for non_stat in non_stats:
                     if feature == non_stat:
                         return
+                stats[feature]['values'].append(track[feature])
                 stats[feature]['measures']['avg'] += track[feature]
 
                 if first or track[feature] > stats[feature]['measures']['max']:

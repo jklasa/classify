@@ -99,6 +99,58 @@ p {
 }
 
 /* ===========================================
+ *              Select dropdown
+ * =========================================== */
+.select2-container {
+    width: 100% !important;
+    font-size: 125%;
+    -webkit-filter: drop-shadow( 0 3px 3px rgba(0,0,0,0.3) );
+    filter: drop-shadow( 0 3px 3px rgba(0,0,0,0.3) );
+    -ms-filter: "progid:DXImageTransform.Microsoft.Dropshadow(OffX=0, OffY=1, Color='#444')";
+    filter: "progid:DXImageTransform.Microsoft.Dropshadow(OffX=0, OffY=1, Color='#444')";
+}
+
+.select2-container * {
+    outline: none;
+    border: none;
+}
+
+.select2-selection--single {
+    border: none !important;
+}
+
+.select2-selection__rendered {
+    background-color: BG_COLOR;
+    color: ALT_COLOR !important;
+    padding-bottom: 3px;
+}
+
+.select2-dropdown {
+    border: none;
+    -webkit-filter: drop-shadow( 0px -1px 5px rgba(0,0,0,0.5) );
+    filter: drop-shadow( 0 -1px 5px rgba(0,0,0,0.5) );
+    -ms-filter: "progid:DXImageTransform.Microsoft.Dropshadow(OffX=0, OffY=1, Color='#444')";
+    filter: "progid:DXImageTransform.Microsoft.Dropshadow(OffX=0, OffY=1, Color='#444')";
+}
+
+.select2-results__options {
+    overflow-y: inherit !important;
+    max-height: 1000px !important;
+}
+
+.select2-results__option {
+    background-color: BG_COLOR;
+}
+
+.select2-results__option[aria-selected=true] {
+    background-color: FG_COLOR !important;
+}
+
+.select2-results__option--highlighted {
+    background-color: ACCENT_COLOR !important;
+}
+
+/* ===========================================
  *          Custom tables
  * =========================================== */
 .classy-table > tbody > tr {
@@ -276,6 +328,10 @@ p {
     display: none;
 }
 
+.visible {
+    display: block !important;
+}
+
 .clear {
     clear: both;
 }
@@ -332,7 +388,7 @@ p {
 }
 
 /* ===========================================
- *              Donuts are great
+ *              Donuts, histograms
  * =========================================== */
 .proportion-donut {
     margin-bottom: 10px;
@@ -353,6 +409,10 @@ p {
 
 .proportion-donut .arc:nth-child(2) path {
     fill: PROP_UNFILL_COLOR !important;
+}
+
+.bar rect {
+    fill: ACCENT_COLOR !important;
 }
 
 /* ===========================================

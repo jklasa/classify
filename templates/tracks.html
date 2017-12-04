@@ -47,26 +47,28 @@
 {% endmacro %}
 
 {% block styles %}
+<link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css" rel="stylesheet" />
 <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='css/bootstrap-slider.min.css') }}">
 {{ super() }}
 {% endblock %}
 
 {% block scripts %}
 {{ super() }}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
 <script src="{{ url_for('static',filename='js/bootstrap-slider.min.js') }}"></script>
-<script src="https://d3js.org/d3.v3.min.js"></script>
+<script src="https://d3js.org/d3.v4.min.js"></script>
 <script>
-function histogram() {
-    var data = d3.range(1000).map(d3.randomBayes(10));
-
+function histogram(data, id) {
     var formatCount = d3.format(",.0f");
 
-    var svg = d3.select("svg"),
+    var svg = d3.select("#" + id).append("svg")
         margin = {top: 10, right: 30, bottom: 30, left: 30},
-        width = +svg.attr("width") - margin.left - margin.right,
-        height = +svg.attr("height") - margin.top - margin.bottom,
+        width = 700 - margin.left - margin.right,
+        //width = +svg.attr("width") - margin.left - margin.right,
+        height = 200 - margin.top - margin.bottom,
+        //height = +svg.attr("height") - margin.top - margin.bottom,
         g = svg.append("g").attr("transform", "translate(" + margin.left + "," + margin.top + ")");
-
+    
     var x = d3.scaleLinear()
         .rangeRound([0, width]);
 
@@ -110,11 +112,11 @@ function donutChart(prop, id) {
         height = 80,
         radius = Math.min(width, height) / 2;
 
-    var arc = d3.svg.arc()
+    var arc = d3.arc()
         .outerRadius(radius)
         .innerRadius(radius - 15);
 
-    var pie = d3.layout.pie()
+    var pie = d3.pie()
         .sort(null)
         .value(function(d) { return d });
 
@@ -154,7 +156,7 @@ switch_measure('features', 'avg');
     {% for stat in stats %}
         {% if stats[stat]['type'] == 'prop' %}
             donutChart({{ stats[stat]['measures'][measure] }}, "{{ stat }}-{{ measure }}");
-            //histogram({{ stats[stat] }}, "{{ stat }}-dist");
+
         {% endif %}
     {% endfor %}
 
@@ -166,6 +168,34 @@ switch_measure('features', 'avg');
         switch_measure('features', "{{ measure }}")
     });
 {% endfor %}
+
+{% for stat in stats %}
+    {% if stats[stat]['type'] != 'other' %}
+        var data = [];
+        {% for value in stats[stat]['values'] %}
+        data.push({{ value }});
+        {% endfor %}
+    
+        histogram(data, "{{ stat }}-dist");
+    {% endif %}
+{% endfor %}
+
+function selectDistribution() {
+    var dist = $('#dist-select').select2('data')[0].text;
+    $('#' + dist + "-dist").addClass('visible').siblings().removeClass('visible');
+}
+
+$(document).ready(function() {
+    $('.dropdown').select2({
+        minimumResultsForSearch: Infinity
+    });
+    selectDistribution();
+});
+
+$('#dist-select').on("select2:select", function(e) {
+    selectDistribution();
+});
+
 </script>
 {% endblock %}
 
@@ -326,11 +356,21 @@ switch_measure('features', 'avg');
 <div class="card col-xs-12">
     <div class="card-content clearfix">
         {{ collapsable_heading("distributions") }}
-        <div id="distributions">
+        <div id="distributions" class="collapse in">
+            <div>
+                <p>select a feature</p>
+                <select id="dist-select" class="dropdown">
+                    {% for stat in stats %}
+                        {% if stats[stat]['type'] == 'prop' %}
+                            <option>{{ stat }}</option>
+                        {% endif %}
+                    {% endfor %}
+                </select>
+            </div>
             {% for stat in stats %}
                 {% if stats[stat]['type'] == 'prop' %}
-                    <div id="{{ stat }}-dist">
-
+                    <div id="{{ stat }}-dist" class="hidden">
+                        <p class="text-center">{{ stat }}</p>
                     </div>
                 {% endif %}
             {% endfor %}
