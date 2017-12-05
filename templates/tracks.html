@@ -196,13 +196,21 @@ $('#dist-select').on("select2:select", function(e) {
     selectDistribution();
 });
 
+function showAlert(status) {
+    $('#status-alert').hide();
+    $('#status-alert').text(status);
+}
+
 function submit_form() {
     $.ajax({
-        url:'{{ save_url }}',
-        type:'post',
-        data:$('#save-form').serialize(),
-        success: function(){
-            alert("success");
+        url: '{{ save_url }}',
+        type: 'post',
+        data: $('#save-form').serialize(),
+        success: function(msg, status, jqXHR) {
+            //console.log(msg);
+            //console.log(jqXHR);
+            //console.log(status);
+            //showAlert("hello");
         }
     });
 }
@@ -433,17 +441,21 @@ $('#form-submit').click(function() {
                 <button type="button" class="close" data-dismiss="modal">&times;</button>
                 <p class="modal-title heading">save playlist subset</p>
             </div>
-            <form id="save-form">
-                <div class="modal-body">
+            <div class="modal-body">
+                <form id="save-form">
                     <label for="name">playlist name</label>
-                    <input type="text" class="form-control" id="name" value="{{ playlist['name'] }}-filtered">
+                    <input type="text" class="form-control" name="name" value="{{ playlist['name'] }}-filtered">
                     <label for="description">description</label>
-                    <textarea class="form-control" rows="2" id="description">a filtered subset of {{ playlist['name'] }} by classify!</textarea>
+                    <textarea class="form-control" rows="2" name="description">a filtered subset of {{ playlist['name'] }} by classify!</textarea>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <div id="status-alert" class="alert">
+                    <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
                 </div>
-                <div class="modal-footer">
-                    <input id="form-submit" type="submit" class="btn btn-success center" data-dismiss="modal" value="SAVE">
-                </div>
-            </form>
+                <input id="form-submit" class="btn btn-success center" data-dismiss="modal" value="SAVE">
+            </div>
+            </div>
         </div>
     </div>
 </div>

@@ -28,6 +28,8 @@ PROFILE_ENDPOINT = SPOTIFY_API_ENDPOINT + "/me"
 PLAYLISTS_ENDPOINT = SPOTIFY_API_ENDPOINT + "/me/playlists"
 PLAYLIST_ENDPOINT = SPOTIFY_API_ENDPOINT + "/users/{uid}/playlists/{pid}"
 AUDIO_FEATURES_ENDPOINT = SPOTIFY_API_ENDPOINT + "/audio-features?ids={}"
+PLAYLIST_CREATE_ENDPOINT = SPOTIFY_API_ENDPOINT + "/users/{uid}/playlists"
+PLAYLIST_ADD_ENDPOINT = SPOTIFY_API_ENDPOINT + "/users/{uid}/playlists/{pid}/tracks"
 
 def get_auth_url(redirect_uri):
     auth_query_parameters = {
@@ -62,6 +64,10 @@ def get_unauthorized(url):
     resp = requests.get(url)
     return json.loads(resp.text)
 
+def post_authorized(auth_header, url, data):
+    resp = requests.post(url, headers=auth_header, data=json.dumps(data))
+    return json.loads(resp.text)
+
 def get_profile(auth_header):
     url = PROFILE_ENDPOINT
     return get_authorized(auth_header, url)
@@ -82,6 +88,14 @@ def get_audio_features(auth_header, tracks_data):
 
     url = AUDIO_FEATURES_ENDPOINT.format(csv_tids)
     return get_authorized(auth_header, url)
+
+def create_playlist(auth_header, user_id, data):
+    url = PLAYLIST_CREATE_ENDPOINT.format(uid=user_id)
+    return post_authorized(auth_header, url, data)
+
+def add_tracks_to_playlist(auth_header, user_id, playlist_id, uris):
+    url = PLAYLIST_ADD_ENDPOINT.format(uid=user_id, pid=playlist_id)
+    return post_authorized(auth_header, url, uris)
 
 def round_float(val):
         return ceil(val * 10000.0) / 10000.0

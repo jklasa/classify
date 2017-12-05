@@ -187,15 +187,6 @@ def tracks():
     
             if add:
                 audio_feats.append(track)
-            
-
-        # Save filtered tracks to database
-        #entry = db.users.find_one_and_update(
-        #    {'id': profile_data['id']}, 
-        #    {'$set': profile}, 
-        #    upsert = True,
-        #    return_document=ReturnDocument.AFTER
-        #)
     else:
         audio_feats = unfiltered_audio_feats
  
@@ -231,6 +222,22 @@ def tracks():
         stats[feat]['measures']['avg'] = round_float(stats[feat]['measures']['avg'])
         for measure in stats[feat]['measures']:
             stats[feat]['measures'][measure] /= 100.0
+    
+    # Save filtered tracks to database
+    if flask.request.method == 'POST':
+        uris = []
+        for track in tracks:
+            uris.append("spotify:track:" + track['track']['id'])
+
+        filtered = {
+            "uris": uris
+        }
+
+        db.users.update_one(
+            { '_id': ObjectId(user_id) },
+            {'$set': filtered }, 
+            upsert = True,
+        )
 
     tracks_url = "/tracks?id={}&playlist={}&owner={}".format(user_id, playlist_id, owner_id)
     playlists_url = "/playlists?id={}".format(user_id)
@@ -250,14 +257,57 @@ def tracks():
 
 
 @app.route('/save', methods=['POST'])
-def save_playlist():
-    print request.args['id']
-    print request.form
+def save_user_playlist():
+    # Responses
+    def create_response(status, info):
+        resp = make_response('{"status": "' + status + ', "info: "' + info + '"}')
+        resp.headers['Content-Type'] = "application/json"
+        return resp
 
-    resp = make_response('{"status": "success"}')
-    resp.headers['Content-Type'] = "application/json"
-    resp.set_cookie('token', access_token)
-    return resp
+    # Get user data from database
+    user_key = request.args['id']
+    if not ObjectId.is_valid(user_key):
+        return create_response('failure', 'invalid id')
+
+    user = db.users.find_one({ '_id': ObjectId(user_key) })
+    if user is None:
+        return create_response('failure', 'no user')
+
+    # Verify that the client side token is equal to the database's token
+    client_token = request.cookies.get('token')
+    access_token = user['token']
+    if client_token != access_token:
+        return create_response('failure', 'invalid token')
+
+    authorization_header = {"Authorization": "Bearer {}".format(access_token)}
+    user_id = user['id']
+
+    # Create new playlist
+    data = {
+        "name": request.form['name'],
+        "description": request.form['description'],
+        "public": "false"
+    }
+    create_resp = create_playlist(authorization_header, user_id, data)
+
+    if 'error' in create_resp:
+        print create_resp
+        return create_response('failure', 'error creating')
+
+    # Get the tracks from database if available
+    if not 'uris' in user:
+        return create_response('failure', 'no uris')
+    uris = user['uris']
+
+    # Add the tracks to the playlist
+    playlist_id = create_resp['id']
+    add_resp = add_tracks_to_playlist(authorization_header, user_id, playlist_id, uris)
+
+    if 'error' in add_resp:
+        print add_resp
+        return create_response('failure', 'error adding')
+
+    return create_response('success', 'created new playlist')
 
 def api_error_handler(data):
     error = data['error']
