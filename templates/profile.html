@@ -3,11 +3,11 @@
         {{ collapsable_heading("user") }}
         <div id="user" class="collapse in">
             {% if profile['avatar'] %}
-            <img class="img-responsive center img-circle" src="{{ profile['avatar'] }}">
+            <img class="img-responsive center img-circle" src="{{ profile['avatar']['url'] }}">
             {% else %}
             <img class="img-responsive center img-circle" src="{{ url_for('static', filename='images/profile.png') }}">
             {% endif %}
-            <p class="text-center">{{ profile['id'] }}</p>
+	    <p class="text-center">{{ profile['name'] }}</p>
             <p class="text-center">
                 {{ profile['followers'] }}
                 {% if profile['followers'] == 1 %}

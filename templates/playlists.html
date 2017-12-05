@@ -63,7 +63,13 @@ $('#submit-playlist').on('click', function(event) {
                     {% endif %}
                     </td>
                     <td>{{ item['name'] }}</td>
-                    <td>{{ item['owner']['id'] }}</td>
+                    <td>
+			{% if item['owner']['display_name'] == 'null' %}
+			{{ item['owner']['id'] }}
+			{% else %}
+			{{ item['owner']['display_name'] }}
+			{% endif %}
+		    </td>
                     <td>{{ item['tracks']['total'] }}</td>
                 </tr>
                 {% endfor %}

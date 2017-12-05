@@ -613,3 +613,11 @@ input.btn {
     margin-right: 25px;
     float: left;
 }
+
+#playlists-table #table-body tr td:nth-child(3) {
+    word-break: break-all;
+}
+
+#playlist > div:nth-child(2) > table > tbody > tr:nth-child(2) > td:nth-child(2) {
+    word-break: break-all;
+}

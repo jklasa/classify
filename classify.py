@@ -15,9 +15,10 @@ client = MongoClient('mongodb://localhost:27017')
 db = client['classify']
 
 # Server-side Parameters
-CLIENT_SIDE_URL = "http://127.0.0.1"
-PORT = 8080
-REDIRECT_URI = "{}:{}".format(CLIENT_SIDE_URL, PORT)
+CLIENT_SIDE_URL = "http://18.216.149.158"
+PORT = 80
+#REDIRECT_URI = "{}:{}".format(CLIENT_SIDE_URL, PORT)
+REDIRECT_URI = CLIENT_SIDE_URL
 
 
 @app.route("/")
@@ -52,8 +53,14 @@ def tokenrecv():
     else:
         avatar = None
 
+    if profile_data['display_name'] != 'null':
+        username = profile_data['display_name']
+    else:
+	username = profile_data['id']
+
     profile = {
         "profile": {
+	    "name": username,
             "followers": profile_data['followers']['total'],
             "avatar": avatar
         },
@@ -329,4 +336,4 @@ def page_not_found(e):
     return render_template('error.html', error=error, description=desc)
 
 if __name__ == "__main__":
-    app.run(debug=True,port=PORT)
+    app.run(host='0.0.0.0', debug=False, threaded=True, port=PORT)

@@ -243,7 +243,13 @@ $('#form-submit').click(function() {
                         </tr>
                         <tr>
                             <td>owner</td>
-                            <td>{{ playlist['owner']['id'] }}</td>
+                            <td>
+				{% if playlist['owner']['display_name'] == 'null' %}
+				{{ playlist['owner']['id'] }}
+				{% else %}
+				{{ playlist['owner']['display_name'] }}
+				{% endif %}
+			    </td>
                         </tr>
                         <tr>
                             <td>description</td>
