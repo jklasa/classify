@@ -234,6 +234,7 @@ def tracks():
 
     tracks_url = "/tracks?id={}&playlist={}&owner={}".format(user_id, playlist_id, owner_id)
     playlists_url = "/playlists?id={}".format(user_id)
+    save_url = "/save?id={}".format(user_id)
 
     resp = make_response(render_template("tracks.html",
                                          profile=user['profile'],
@@ -242,10 +243,21 @@ def tracks():
                                          stats=stats,
                                          tracks_url=tracks_url,
                                          playlists_url=playlists_url,
+                                         save_url=save_url,
                                          filtered=(flask.request.method == 'POST')))
     resp.set_cookie('token', access_token)
     return resp
 
+
+@app.route('/save', methods=['POST'])
+def save_playlist():
+    print request.args['id']
+    print request.form
+
+    resp = make_response('{"status": "success"}')
+    resp.headers['Content-Type'] = "application/json"
+    resp.set_cookie('token', access_token)
+    return resp
 
 def api_error_handler(data):
     error = data['error']

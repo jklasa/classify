@@ -11,7 +11,7 @@ with open('spotify_secret.json') as json_data:
     CLIENT_SECRET = client['client_secret']
 
 # Spotify Parameters
-SCOPE = "user-library-read playlist-read-private playlist-read-collaborative"
+SCOPE = "playlist-read-private playlist-read-collaborative playlist-modify-public playlist-modify-private"
 STATE = ""
 SHOW_DIALOG_bool = True
 SHOW_DIALOG_str = str(SHOW_DIALOG_bool).lower()

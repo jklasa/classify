@@ -157,6 +157,10 @@ p {
 /* ===========================================
  *          Custom tables
  * =========================================== */
+.table {
+    margin-bottom: 0;
+}
+
 .classy-table > tbody > tr {
     height: 80px;
 }
@@ -317,6 +321,14 @@ p {
     width: 80%;
     min-width: 60em;
     max-width: 1200px;
+}
+
+input.btn {
+    min-width: 200px;
+}
+
+.close {
+    font-size: 250%;
 }
 
 .upper-tabbed {
@@ -514,6 +526,22 @@ p {
 }
 
 /* ===========================================
+ *              Modal Dialogs
+ * =========================================== */
+.modal-dialog {
+    display: table;
+    background-color: FG_COLOR;
+    border-radius: 20px;
+}
+
+.modal-content {
+    display: table-cell;
+    vertical-align: middle;
+    text-align: center;
+    border-radius: 20px;
+}
+
+/* ===========================================
  *              Individual elements
  * =========================================== */
 #login-btn {
@@ -568,7 +596,9 @@ p {
     box-shadow: 0px 3px 5px #111111;
 }
 
-#playlist 
+#sel-playlist {
+    width: 250px;
+}
 
 #error-img {
     width: 50px;
